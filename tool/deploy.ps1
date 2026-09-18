@@ -10,7 +10,7 @@
 # Alur: flutter build windows --release  ->  tool\deploy.ps1  ->  jalankan exe di dist
 
 param(
-    [string]$Dest   = "D:\kiosk-dist",
+    [string]$Dest   = 'E:\ruangbaca\kiosk-dist',
     [string]$Source = ""
 )
 
