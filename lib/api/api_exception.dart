@@ -16,7 +16,7 @@ class ApiException implements Exception {
   bool get isValidation => statusCode == 422;
   bool get isServerError => statusCode != null && statusCode! >= 500;
 
-  /// Pesan validasi pertama (bila ada) — lebih informatif untuk pengguna.
+  /// Pesan validasi pertama bila ada; lebih informatif untuk pengguna.
   String get bestMessage {
     for (final entry in errors.entries) {
       if (entry.value.isNotEmpty) {

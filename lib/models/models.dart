@@ -1,9 +1,9 @@
-/// Model data kiosk — bentuknya mengikuti respons API `api/kiosk/*`.
+/// Model data kiosk; bentuknya mengikuti respons API `/api/kiosk/*`.
 ///
-/// Catatan penting soal penamaan field: server mengirim sebagian field dalam
-/// camelCase (mis. `loan_max_books` untuk bootstrap tapi `todayVisits` untuk
-/// stats, `coverImageUrl`, `hasEmail`). Model di sini menyalin persis agar
-/// tidak ada asumsi yang salah.
+/// Penamaan field mengikuti server apa adanya. Server mencampur snake_case dan
+/// camelCase (`loan_max_books` di bootstrap, tapi `todayVisits`,
+/// `coverImageUrl`, `hasEmail` di tempat lain), jadi model menyalin persis
+/// tanpa menormalkan.
 library;
 
 int _asInt(dynamic value, [int fallback = 0]) {
@@ -27,7 +27,7 @@ DateTime? _asDateOrNull(dynamic value) {
   return DateTime.tryParse(text);
 }
 
-/// Konfigurasi sesi kiosk (jam operasional) dari server.
+/// Konfigurasi sesi kiosk dari server: jam operasional.
 class KioskSession {
   const KioskSession({
     required this.timezone,

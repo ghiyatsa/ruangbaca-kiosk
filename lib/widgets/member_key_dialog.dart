@@ -8,8 +8,8 @@ import 'qr_webcam_scanner.dart';
 
 /// Dialog verifikasi QR (Member Key) untuk pinjam/kembali.
 ///
-/// Mendukung dua jalur: scanner HID/USB (input teks + Enter) dan webcam
-/// (bila diaktifkan di konfigurasi). Mengembalikan payload QR via
+/// Dua jalur masukan: scanner HID/USB (teks + Enter) dan webcam bila
+/// diaktifkan di konfigurasi. Payload QR dikembalikan lewat
 /// `Navigator.pop(context, payload)`.
 class MemberKeyDialog extends StatefulWidget {
   const MemberKeyDialog({

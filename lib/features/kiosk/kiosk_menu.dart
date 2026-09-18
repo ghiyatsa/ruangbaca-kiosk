@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'kiosk_shortcut.dart';
 
-/// Menu layanan kiosk — selaras dengan `resources/js/features/kiosk/menu.ts`.
+/// Menu layanan kiosk.
 ///
-/// Catatan: nilai `return` tidak dipakai karena merupakan kata kunci Dart,
-/// sehingga dipakai `returnBook`.
+/// Nama `returnBook` dipakai karena `return` adalah kata kunci Dart.
 enum KioskMenu {
   visit,
   member,
@@ -66,10 +65,8 @@ enum KioskMenu {
     }
   }
 
-  /// Digit pintasan menu: 1–4.
-  ///
-  /// Digit ini hanya berlaku bersama tombol **Alt** (lihat `KioskShortcut`),
-  /// agar mengetik angka pada kolom isian tidak berpindah menu.
+  /// Digit pintasan menu: 1-4. Hanya berlaku bersama Alt (lihat
+  /// `KioskShortcut`) agar mengetik angka di kolom isian tidak berpindah menu.
   String get shortcutKey => (index + 1).toString();
 
   /// Label pintasan untuk ditampilkan ke pengguna, mis. `Alt+1`.

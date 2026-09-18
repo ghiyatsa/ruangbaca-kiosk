@@ -10,7 +10,7 @@ import '../../widgets/form_fields.dart';
 import '../../widgets/kiosk_toast.dart';
 import 'member_quick_visit.dart';
 
-/// Layanan Buku Tamu — mencatat kunjungan perpustakaan.
+/// Layanan Buku Tamu: mencatat kunjungan perpustakaan.
 class VisitForm extends StatefulWidget {
   const VisitForm({
     super.key,
@@ -291,10 +291,8 @@ class _VisitFormState extends State<VisitForm> {
   }
 }
 
-/// Pemisah antara jalur cepat (scan) dan form manual.
-///
-/// Form manual tetap tersedia untuk pengunjung umum atau yang belum punya
-/// akun anggota.
+/// Pemisah antara jalur cepat dan form manual, yang tetap tersedia untuk
+/// pengunjung umum atau yang belum punya akun anggota.
 class _ManualVisitHeader extends StatelessWidget {
   const _ManualVisitHeader();
 

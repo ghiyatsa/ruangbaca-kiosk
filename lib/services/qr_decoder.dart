@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter_zxing/flutter_zxing.dart' as zx;
 
-/// Dekoder QR berbasis ZXing (Dart FFI, mendukung Windows).
+/// Dekoder QR berbasis ZXing (Dart FFI, Windows).
 ///
-/// Frame dari webcam (`camera_desktop`) berbentuk BGRA8888. Setiap baris bisa
-/// memiliki padding (`bytesPerRow > width * 4`), sehingga buffer dirapikan dulu
+/// Frame webcam (`camera_desktop`) berbentuk BGRA8888 dan tiap barisnya bisa
+/// punya padding (`bytesPerRow > width * 4`), jadi buffer dirapikan dulu
 /// sebelum diserahkan ke dekoder.
 class QrDecoder {
   QrDecoder()
@@ -63,7 +63,7 @@ class QrDecoder {
 
       return text;
     } catch (_) {
-      // Frame tidak dapat didekode — anggap tidak ada QR.
+      // Frame gagal didekode; anggap tidak ada QR.
       return null;
     }
   }

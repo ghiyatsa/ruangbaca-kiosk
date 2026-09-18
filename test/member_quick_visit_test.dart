@@ -105,7 +105,7 @@ void main() {
     expect(body['verification_payload'], 'MK-payload-uji');
     expect(body['purpose'], 'reference');
 
-    // Toast sukses muncul (gaya sonner, hilang sendiri).
+    // Toast sukses muncul dan hilang sendiri.
     expect(find.text('Kunjungan Tercatat'), findsOneWidget);
     expect(find.textContaining('Rahmat Hidayat'), findsWidgets);
 

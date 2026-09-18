@@ -6,34 +6,29 @@ import 'package:window_manager/window_manager.dart';
 import '../../core/theme.dart';
 
 /// Kunci navigasi global, dipakai agar dialog keluar dapat ditampilkan dari
-/// luar pohon widget (mis. dari callback `onWindowClose`).
+/// luar pohon widget, mis. dari callback `onWindowClose`.
 final GlobalKey<NavigatorState> kioskNavigatorKey = GlobalKey<NavigatorState>();
 
-/// Frasa yang harus diketik pengguna untuk benar-benar keluar dari kiosk.
-///
-/// Ini bukan rahasia — tujuannya mencegah keluar karena sentuhan/klik tak
-/// sengaja pada mesin yang dipakai umum, bukan melindungi dari orang yang
-/// memang ingin keluar. Karena itu frasa ini boleh tampil di dokumentasi.
+/// Frasa konfirmasi keluar. Bukan rahasia: fungsinya menahan sentuhan tak
+/// sengaja di mesin yang dipakai umum, bukan melindungi dari orang yang
+/// memang ingin keluar. Karena itu boleh ditampilkan di dokumentasi.
 const String kioskExitPhrase = 'KELUAR';
 
 /// Lama menekan logo di panel menu untuk membuka dialog keluar.
 const Duration kioskExitLongPress = Duration(seconds: 3);
 
-/// Menjaga jendela kiosk tetap terbuka dan menyediakan satu-satunya jalan
-/// keluar yang disengaja.
+/// Menahan jendela kiosk agar tidak tertutup, dan menyediakan satu-satunya
+/// jalan keluar yang disengaja.
 ///
-/// Sebelumnya mode kiosk hanya memasang layar penuh dan selalu-di-atas,
-/// sehingga tombol tutup jendela (X) dan Alt+F4 **langsung mematikan
-/// aplikasi** — satu klik tak sengaja membuat kiosk mati. `setPreventClose`
-/// memang belum pernah dipanggil meskipun komentar konfigurasi mengklaim
-/// "cegah tombol tutup".
+/// `windowManager.setPreventClose(true)` membuat klik X dan Alt+F4 tidak
+/// langsung mematikan aplikasi; keduanya dialihkan ke dialog konfirmasi.
 class KioskExitGuard with WindowListener {
   KioskExitGuard();
 
   bool _enabled = false;
   bool _promptOpen = false;
 
-  /// Apakah penjagaan sedang aktif (mode kiosk menyala).
+  /// Apakah penjagaan sedang aktif.
   bool get isEnabled => _enabled;
 
   /// Pasang penjagaan: jendela tidak dapat ditutup kecuali lewat [prompt].
@@ -52,19 +47,18 @@ class KioskExitGuard with WindowListener {
     await windowManager.setPreventClose(false);
   }
 
-  /// Dipanggil saat sistem meminta jendela ditutup: klik X, Alt+F4, atau
-  /// permintaan dari luar. Karena `setPreventClose(true)`, jendela TIDAK
-  /// tertutup dengan sendirinya — di sini kita tawarkan konfirmasi.
+  /// Dipanggil saat sistem meminta jendela ditutup (klik X, Alt+F4).
+  /// Karena `setPreventClose(true)`, jendela tidak tertutup sendiri; di sini
+  /// kita tawarkan konfirmasi.
   @override
   void onWindowClose() {
     if (!_enabled) return;
     unawaited(prompt());
   }
 
-  /// Menampilkan dialog konfirmasi keluar.
-  ///
-  /// Aman dipanggil berkali-kali: permintaan saat dialog sudah terbuka
-  /// diabaikan, sehingga menekan Alt+F4 berulang tidak menumpuk dialog.
+  /// Menampilkan dialog konfirmasi keluar. Aman dipanggil berkali-kali:
+  /// permintaan saat dialog sudah terbuka diabaikan, jadi menekan Alt+F4
+  /// berulang tidak menumpuk dialog.
   Future<void> prompt() async {
     if (!_enabled || _promptOpen) return;
 
@@ -90,17 +84,13 @@ class KioskExitGuard with WindowListener {
   }
 }
 
-/// Instance global penjaga keluar.
-///
-/// Dibuat global agar dapat dipanggil dari `main.dart` (saat menyiapkan
-/// jendela) maupun dari UI (tekan lama logo), tanpa perlu meneruskan objek
-/// melalui pohon widget.
+/// Instance global penjaga keluar, dipanggil dari `main.dart` (menyiapkan
+/// jendela) dan dari UI (tekan lama logo) tanpa meneruskan objek lewat pohon
+/// widget.
 final KioskExitGuard kioskExitGuard = KioskExitGuard();
 
-/// Dialog konfirmasi keluar dari mode kiosk.
-///
-/// Keluar baru diizinkan setelah pengguna mengetik [kioskExitPhrase], sehingga
-/// klik/sentuhan tak sengaja tidak dapat mematikan kiosk.
+/// Dialog konfirmasi keluar dari mode kiosk. Tombol keluar baru aktif
+/// setelah pengguna mengetik [kioskExitPhrase].
 class KioskExitDialog extends StatefulWidget {
   const KioskExitDialog({super.key});
 

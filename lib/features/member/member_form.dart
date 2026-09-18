@@ -8,7 +8,8 @@ import '../../widgets/form_fields.dart';
 import 'member_claim_dialog.dart';
 import 'member_email.dart';
 
-/// Layanan Daftar Anggota — pendaftaran anggota baru via taut akun Google.
+/// Layanan Daftar Anggota: pendaftaran anggota baru lewat penautan akun
+/// Google.
 class MemberForm extends StatefulWidget {
   const MemberForm({super.key});
 
@@ -89,7 +90,7 @@ class _MemberFormState extends State<MemberForm> {
     }
   }
 
-  /// Membuat QR baru dengan data yang sama (setelah kedaluwarsa).
+  /// Membuat QR baru dengan data yang sama, setelah yang lama kedaluwarsa.
   Future<void> _restartRegistration(String email) async {
     final controller = context.read<KioskController>();
     try {

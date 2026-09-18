@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Menjalankan aksi async dengan indikator loading & penanganan error.
-///
-/// Menyederhanakan pola "tombol memproses" di seluruh form.
+/// Menjalankan aksi async dengan indikator loading dan penanganan galat,
+/// untuk menyederhanakan pola "tombol memproses" di seluruh form.
 class AsyncRunner {
   const AsyncRunner._();
 

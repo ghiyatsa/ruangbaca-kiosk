@@ -1,4 +1,4 @@
-/// Identitas & penjenamaan (branding) Ruang Baca Teknik Informatika.
+/// Identitas dan penjenamaan Ruang Baca Teknik Informatika.
 ///
 /// Diselaraskan dengan `resources/js/lib/brand.ts` pada aplikasi web agar
 /// tampilan kiosk konsisten.

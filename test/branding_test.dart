@@ -6,8 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ruangbaca_kiosk/widgets/ruangbaca_logo.dart';
 
-/// Membuktikan logo kiosk desktop benar-benar memakai logo Ruang Baca
-/// (seperti kiosk web), bukan ikon Material generik.
+/// Membuktikan aset logo Ruang Baca benar-benar terpaket dan dirender, bukan
+/// ikon Material generik.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,8 +17,8 @@ void main() {
 
     final svg = utf8.decode(data.buffer.asUint8List());
     expect(svg, contains('<svg'));
-    // Path khas dari public/images/ruangbaca.svg milik web. Bila berkas aset
-    // tergantikan oleh gambar lain, atau gagal terpaket, uji ini gagal.
+    // Path khas logo Ruang Baca. Bila aset tergantikan gambar lain atau
+    // gagal terpaket, uji ini gagal.
     expect(svg, contains('M1063.465,2681.729l1273.07,0'));
     expect(svg, contains('M1148.294,2220.218l559.706,-520.218'));
     // Sepuluh goresan: 4 sisi bingkai + panah + garis + 4 goresan halaman.

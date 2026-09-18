@@ -8,11 +8,11 @@ import '../../state/kiosk_controller.dart';
 import '../../widgets/kiosk_toast.dart';
 import '../../widgets/member_key_dialog.dart';
 
-/// Jalur cepat Buku Tamu untuk anggota: satu kali scan Member Key, langsung
-/// tercatat tanpa mengisi satu kolom pun.
+/// Jalur cepat Buku Tamu untuk anggota: satu kali scan Member Key langsung
+/// tercatat, tanpa mengisi kolom apa pun.
 ///
-/// Dipakai di atas form manual pada menu Buku Tamu. Form manual tetap ada
-/// untuk pengunjung umum / yang belum punya akun.
+/// Ditampilkan di atas form manual pada menu Buku Tamu; form manual tetap
+/// tersedia untuk pengunjung umum atau yang belum punya akun.
 class MemberQuickVisitCard extends StatefulWidget {
   const MemberQuickVisitCard({super.key, required this.purposeOptions});
 
@@ -23,7 +23,7 @@ class MemberQuickVisitCard extends StatefulWidget {
 }
 
 class _MemberQuickVisitCardState extends State<MemberQuickVisitCard> {
-  /// Bawaan "Baca di tempat" — tujuan yang paling sering dipakai anggota.
+  /// Bawaan "Baca di tempat", tujuan yang paling sering dipakai anggota.
   String _purpose = 'read';
   bool _submitting = false;
 
@@ -121,7 +121,7 @@ class _MemberQuickVisitCardState extends State<MemberQuickVisitCard> {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Scan Member Key — data Anda terisi otomatis.',
+                      'Scan Member Key, data Anda terisi otomatis.',
                       style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
                     ),
                   ],

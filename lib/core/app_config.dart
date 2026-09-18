@@ -5,16 +5,17 @@ import 'package:flutter/services.dart';
 
 /// Konfigurasi aplikasi kiosk.
 ///
-/// Prioritas (tertinggi → terendah):
+/// Urutan prioritas, tertinggi lebih dulu:
 ///   1. Variabel lingkungan (KIOSK_BASE_URL, KIOSK_API_KEY, ...)
 ///   2. `config/kiosk.json` (atau `kiosk.json`) di samping executable
 ///   3. `assets/kiosk.json` (nilai bawaan saat dibangun)
 ///
-/// Dengan begitu teknis dapat mengubah alamat server / API key tanpa membangun
-/// ulang aplikasi — cukup edit file di samping executable lalu jalankan ulang.
+/// Teknisi bisa mengubah alamat server atau API key tanpa membangun ulang
+/// aplikasi, cukup mengedit berkas di samping executable lalu menjalankannya
+/// kembali.
 ///
-/// Autentikasi memakai **API key** (`X-Kiosk-Api-Key`) yang bersifat permanen,
-/// sehingga kiosk tidak perlu PIN maupun aktivasi perangkat.
+/// Autentikasi memakai API key (`X-Kiosk-Api-Key`) yang berlaku permanen, jadi
+/// kiosk tidak perlu PIN maupun aktivasi perangkat.
 class AppConfig {
   const AppConfig({
     required this.baseUrl,
@@ -27,7 +28,7 @@ class AppConfig {
     this.requestTimeoutSeconds = 25,
   });
 
-  /// Contoh: `https://ruangbaca.example.com` (tanpa garis miring di akhir).
+  /// Contoh: `https://ruangbaca.example.com`, tanpa garis miring di akhir.
   final String baseUrl;
 
   /// API key bersama (`X-Kiosk-Api-Key`) hasil `php artisan kiosk:api-key generate`.
@@ -38,7 +39,7 @@ class AppConfig {
   /// Hanya diperlukan agar kiosk dapat memantau status penautan akun Google
   /// secara langsung (`GET /api/kiosk/members/status`). Endpoint tersebut
   /// membaca perangkat dari device token, bukan API key. Bila kosong,
-  /// pendaftaran tetap berjalan normal — hanya statusnya tidak dapat dipantau.
+  /// pendaftaran tetap berjalan normal, hanya statusnya tidak dapat dipantau.
   final String? deviceToken;
 
   /// Nama perangkat yang tampil pada dashboard admin.

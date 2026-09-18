@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Palet & tema kiosk.
+/// Palet dan tema kiosk.
 ///
-/// Warna primer diambil dari tema web (`--primary: oklch(0.457 0.24 277.023)`)
-/// yang setara dengan indigo-700 (#4338CA).
+/// Warna primer mengikuti tema web (`--primary: oklch(0.457 0.24 277.023)`,
+/// setara indigo-700 #4338CA).
 class KioskTheme {
   KioskTheme._();
 

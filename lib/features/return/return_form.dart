@@ -15,8 +15,8 @@ import '../../widgets/member_key_dialog.dart';
 
 /// Layanan Kembalikan Buku.
 ///
-/// Alur: masukkan identitas → daftar pinjaman aktif dimuat otomatis →
-/// pilih buku → scan Member Key (QR) → kirim.
+/// Alur: masukkan identitas, daftar pinjaman aktif dimuat otomatis, pilih
+/// buku, scan Member Key, lalu kirim.
 class ReturnForm extends StatefulWidget {
   const ReturnForm({super.key});
 

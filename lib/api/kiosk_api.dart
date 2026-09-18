@@ -10,20 +10,20 @@ import 'api_exception.dart';
 
 /// Klien HTTP untuk API kiosk Laravel (`/api/kiosk/*`).
 ///
-/// Autentikasi memakai header `X-Kiosk-Api-Key` (utama) dan/atau
-/// `X-Kiosk-Device-Token`. Keduanya dikirim bila tersedia sehingga server
-/// memilih kredensial yang valid.
+/// Autentikasi memakai header `X-Kiosk-Api-Key` sebagai kredensial utama dan
+/// `X-Kiosk-Device-Token` sebagai opsional. Keduanya dikirim bila tersedia;
+/// server memilih yang valid.
 class KioskApi {
   KioskApi({required this.config, http.Client? client})
     : _client = client ?? http.Client() {
-    // Device token opsional dari konfigurasi (untuk polling status pendaftaran).
+    // Device token opsional, dipakai untuk polling status pendaftaran.
     _deviceToken = config.deviceToken;
   }
 
   final AppConfig config;
   final http.Client _client;
 
-  /// Device token opsional (bila dikonfigurasi).
+  /// Device token opsional, bila dikonfigurasi.
   String? _deviceToken;
 
   String get baseUrl => config.baseUrl;
@@ -217,7 +217,7 @@ class KioskApi {
     );
   }
 
-  /// Catat kunjungan lewat scan Member Key (buku tamu cepat).
+  /// Catat kunjungan lewat scan Member Key; jalur cepat Buku Tamu.
   ///
   /// Anggota tidak mengisi form apa pun; identitas diambil dari profil oleh
   /// server berdasarkan payload QR.
@@ -312,7 +312,7 @@ class KioskApi {
     return ReturnResult.fromJson(json);
   }
 
-  /// Registrasi anggota baru → dapat QR penautan akun Google.
+  /// Registrasi anggota baru; mengembalikan QR penautan akun Google.
   Future<MemberClaim> storeMember({
     required String name,
     required String email,
@@ -334,7 +334,7 @@ class KioskApi {
     );
   }
 
-  /// Status claim registrasi perangkat ini (untuk polling).
+  /// Status claim registrasi perangkat ini, untuk polling.
   Future<MemberClaim?> memberRegistrationStatus() async {
     final json = await _send('GET', 'api/kiosk/members/status');
     final claim = json['claim'];

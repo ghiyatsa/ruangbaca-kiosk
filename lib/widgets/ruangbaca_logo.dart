@@ -3,18 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../core/theme.dart';
 
-/// Logo Ruang Baca Informatika.
+/// Logo Ruang Baca Informatika, dari `assets/ruangbaca-logo.svg`. Bentuknya
+/// sama dengan `resources/js/components/common/RuangBacaLogo.tsx` di web.
 ///
-/// Bentuknya disalin persis dari komponen web
-/// `resources/js/components/common/RuangBacaLogo.tsx` (SVG 10 path) agar
-/// tampilan kiosk desktop identik dengan kiosk web. Sebelumnya kiosk desktop
-/// memakai ikon Material generik (`Icons.menu_book_rounded`) sehingga
-/// logonya berbeda dari web.
-///
-/// SVG sumber digambar dengan `stroke="#000000"`, lalu diwarnai ulang di sini
-/// memakai [ColorFilter] sehingga satu berkas aset dapat dipakai untuk warna
-/// apa pun. `stroke-opacity` pada SVG tetap dipertahankan sebagai alpha,
-/// sehingga goresan bertingkat pada "halaman buku" tetap terlihat.
+/// SVG digambar dengan `stroke="#000000"` lalu diwarnai ulang lewat
+/// [ColorFilter], sehingga satu aset bisa dipakai untuk warna apa pun.
+/// `stroke-opacity` dipertahankan sebagai alpha agar goresan bertingkat pada
+/// "halaman buku" tetap terlihat.
 class RuangBacaLogo extends StatelessWidget {
   const RuangBacaLogo({
     super.key,

@@ -124,8 +124,8 @@ class _MenuPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Tekan lama logo = satu-satunya jalan keluar yang disengaja,
-              // supaya teknisi tidak perlu mematikan paksa prosesnya.
+              // Tekan lama logo membuka dialog keluar, supaya teknisi tidak
+              // perlu mematikan paksa prosesnya.
               GestureDetector(
                 onLongPress: kioskExitGuard.prompt,
                 child: const RuangBacaLogo(size: 38),

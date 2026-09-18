@@ -1,27 +1,23 @@
 import 'kiosk_menu.dart';
 
-/// Aturan pintasan keyboard untuk memilih menu kiosk.
+/// Aturan pintasan keyboard untuk memilih menu kiosk: Alt + angka 1-4.
 ///
-/// Menu dipilih dengan **Alt + angka 1–4**.
+/// Angka polos (tanpa Alt) bukan pintasan. Kiosk banyak memakai kolom isian
+/// (nomor identitas, tahun terbit, jumlah buku), sehingga mengetik "1"-"4"
+/// saat mengisi formulir tidak boleh berpindah menu.
 ///
-/// Angka polos (tanpa Alt) sengaja TIDAK dianggap pintasan. Kiosk ini banyak
-/// memakai kolom isian — nomor identitas anggota, tahun terbit, jumlah buku —
-/// sehingga mengetik "1"–"4" saat mengisi formulir tidak boleh berpindah menu.
-///
-/// Logika dipisah dari widget agar dapat diuji tanpa membangun UI.
+/// Dipisah dari widget agar bisa diuji tanpa membangun UI.
 class KioskShortcut {
   const KioskShortcut._();
 
   /// Label tombol pengubah yang ditampilkan ke pengguna.
   static const String modifierLabel = 'Alt';
 
-  /// Pola digit di akhir label tombol, agar `1` (baris angka) maupun
-  /// `Numpad 1` (keypad) sama-sama dikenali.
+  /// Digit di akhir label tombol, agar `1` di baris angka dan `Numpad 1`
+  /// sama-sama dikenali.
   static final RegExp _trailingDigit = RegExp(r'(\d)$');
 
-  /// Menentukan menu dari sebuah penekanan tombol.
-  ///
-  /// Mengembalikan `null` bila kombinasi bukan pintasan menu.
+  /// Menu untuk sebuah penekanan tombol, atau `null` bila bukan pintasan.
   static KioskMenu? resolve({
     required String keyLabel,
     required bool altPressed,

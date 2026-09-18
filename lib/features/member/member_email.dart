@@ -1,6 +1,6 @@
 import '../../models/models.dart';
 
-/// Domain email kampus yang diizinkan (selaras dengan web).
+/// Domain email kampus yang diizinkan.
 const List<String> allowedEmailDomains = <String>[
   'mhs.unimal.ac.id',
   'unimal.ac.id',
@@ -64,7 +64,7 @@ String? validateMemberEmail(String localPart, String domain) {
   return null;
 }
 
-/// Apakah claim masih dalam proses (bukan selesai).
+/// Apakah claim masih dalam proses dan belum selesai.
 bool isInteractiveClaim(MemberClaim? claim) {
   if (claim == null) return false;
   return !claim.status.isCompleted;
