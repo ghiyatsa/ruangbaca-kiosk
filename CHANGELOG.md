@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.0.0...v1.1.0) (2026-09-18)
+
+
+### Features
+
+* **rilis:** lampirkan aset rilis dan tambahkan skrip deploy ([#2](https://github.com/ghiyatsa/ruangbaca-kiosk/issues/2)) ([38dfc35](https://github.com/ghiyatsa/ruangbaca-kiosk/commit/38dfc3559c568abc0b44e9e558d1cf05a20fac30))
+
 ## 1.0.0 (2026-09-18)
 
 
