@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'core/brand.dart';
 import 'core/theme.dart';
+import 'features/kiosk/kiosk_exit.dart';
 import 'features/startup/startup_error_screen.dart';
 import 'features/kiosk/kiosk_shell.dart';
 import 'state/kiosk_controller.dart';
@@ -18,6 +19,9 @@ class KioskApp extends StatelessWidget {
     return ChangeNotifierProvider<KioskController>.value(
       value: controller,
       child: MaterialApp(
+        // Kunci navigator dipakai dialog keluar yang dipicu dari luar pohon
+        // widget (callback onWindowClose pada KioskExitGuard).
+        navigatorKey: kioskNavigatorKey,
         title: 'Kiosk ${Brand.shortName}',
         debugShowCheckedModeBanner: false,
         theme: KioskTheme.light(),

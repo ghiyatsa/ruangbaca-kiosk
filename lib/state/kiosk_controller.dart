@@ -24,8 +24,10 @@ enum KioskStatus {
 ///
 /// Autentikasi memakai API key permanen, sehingga tidak ada alur aktivasi/PIN.
 class KioskController extends ChangeNotifier {
-  KioskController({required AppConfig config}) : _config = config {
-    _api = KioskApi(config: config);
+  /// [api] hanya dipakai pengujian untuk menyuntikkan klien HTTP tiruan.
+  KioskController({required AppConfig config, KioskApi? api})
+    : _config = config {
+    _api = api ?? KioskApi(config: config);
   }
 
   final AppConfig _config;
@@ -110,6 +112,19 @@ class KioskController extends ChangeNotifier {
       notes: notes,
     );
     // Perbarui statistik tanpa memblokir alur sukses.
+    unawaited(refreshBootstrapQuietly());
+    return result;
+  }
+
+  /// Buku tamu cepat: catat kunjungan dari scan Member Key anggota.
+  Future<VisitResult> recordMemberVisit({
+    required String verificationPayload,
+    String? purpose,
+  }) async {
+    final result = await _api.storeMemberVisit(
+      verificationPayload: verificationPayload,
+      purpose: purpose,
+    );
     unawaited(refreshBootstrapQuietly());
     return result;
   }

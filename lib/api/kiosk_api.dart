@@ -217,6 +217,27 @@ class KioskApi {
     );
   }
 
+  /// Catat kunjungan lewat scan Member Key (buku tamu cepat).
+  ///
+  /// Anggota tidak mengisi form apa pun; identitas diambil dari profil oleh
+  /// server berdasarkan payload QR.
+  Future<VisitResult> storeMemberVisit({
+    required String verificationPayload,
+    String? purpose,
+  }) async {
+    final json = await _send(
+      'POST',
+      'api/kiosk/visits/member',
+      body: {
+        'verification_payload': verificationPayload,
+        if (purpose != null && purpose.isNotEmpty) 'purpose': purpose,
+      },
+    );
+    return VisitResult.fromJson(
+      (json['visit'] as Map?)?.cast<String, dynamic>() ?? const {},
+    );
+  }
+
   /// Cari buku.
   ///
   /// - `mode = borrow`: kata kunci bebas.

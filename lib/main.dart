@@ -6,6 +6,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
 import 'core/app_config.dart';
+import 'features/kiosk/kiosk_exit.dart';
 import 'state/kiosk_controller.dart';
 
 Future<void> main() async {
@@ -25,7 +26,12 @@ Future<void> main() async {
   runApp(KioskApp(controller: controller));
 }
 
-/// Konfigurasi jendela mode kiosk: layar penuh, selalu di atas.
+/// Konfigurasi jendela mode kiosk: layar penuh, selalu di atas, dan menahan
+/// tombol tutup jendela.
+///
+/// Penahanan tombol tutup wajib dipasang di sini (bukan di dalam widget),
+/// karena `windowManager` sudah siap sebelum UI dibangun — sehingga klik X
+/// atau Alt+F4 pada saat mana pun tidak langsung mematikan aplikasi.
 Future<void> _setupKioskWindow() async {
   await windowManager.ensureInitialized();
 
@@ -44,4 +50,7 @@ Future<void> _setupKioskWindow() async {
     await windowManager.show();
     await windowManager.focus();
   });
+
+  // Jendela menolak ditutup sampai guard melepasnya lewat dialog keluar.
+  await kioskExitGuard.enable();
 }

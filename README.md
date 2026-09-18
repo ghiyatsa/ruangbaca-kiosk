@@ -113,11 +113,36 @@ Konfigurasi dibaca berurutan (yang lebih atas menimpa yang di bawah):
 | `deviceToken` | Opsional. Hanya untuk memantau status pendaftaran (lihat bagian 9). |
 | `deviceName` | Nama perangkat, tampil di server |
 | `idleTimeoutSeconds` | Detik tanpa aktivitas sebelum kembali ke layar utama |
-| `kioskMode` | `true` = layar penuh + selalu di atas |
+| `kioskMode` | `true` = layar penuh, selalu di atas, dan menahan tombol tutup jendela |
 | `enableWebcamScanner` | Aktifkan pemindai QR webcam (selain scanner HID) |
 | `requestTimeoutSeconds` | Batas waktu permintaan HTTP |
 
 Salinan contoh: `config/kiosk.example.json`.
+
+### Keluar dari mode kiosk
+
+Saat `kioskMode` menyala, **tombol tutup jendela (X) dan Alt+F4 tidak lagi
+mematikan aplikasi**. Klik/sentuhan tak sengaja pada mesin yang dipakai umum
+tidak akan membuat kiosk mati. Permintaan tutup akan memunculkan dialog
+konfirmasi.
+
+Ada dua cara membuka dialog keluar:
+
+| Cara | Keterangan |
+| --- | --- |
+| **Tekan lama logo** di panel menu (3 detik) | Untuk operator di depan kiosk |
+| Tombol tutup jendela (X) atau **Alt+F4** | Untuk teknisi lewat papan ketik |
+
+Keluar baru dijalankan setelah frasa **`KELUAR`** diketik pada dialog. Frasa ini
+bukan rahasia — tujuannya mencegah keluar karena sentuhan tak sengaja, bukan
+melindungi dari orang yang memang ingin keluar.
+
+> Tekan `Esc` **tidak** menutup aplikasi; itu hanya kembali ke layar utama.
+
+**Catatan:** penjagaan ini mencegah penutupan yang *disengaja aplikasi*
+(klik X, Alt+F4). Pengelola Tugas Windows (`End task`) tetap dapat menghentikan
+proses, dan hal itu memang tidak bisa dicegah oleh aplikasi biasa — untuk itu
+perlu kebijakan sistem (kiosk mode Windows / akun terbatas).
 
 ### Mendapatkan API key
 
