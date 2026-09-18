@@ -285,6 +285,33 @@ Alur rilis:
    berisi pembaruan `version.txt` dan `CHANGELOG.md`.
 3. Setelah Release PR di-merge, tag `vX.Y.Z` dan GitHub Release dibuat otomatis.
 
+### Token rilis (`RELEASE_PLEASE_TOKEN`)
+
+Workflow `release-please` memakai `secrets.RELEASE_PLEASE_TOKEN`. Secret ini
+**bukan sekadar kosmetik** — ia menentukan dua hal:
+
+| | tanpa secret (`github.token`) | dengan secret (PAT) |
+| --- | --- | --- |
+| Penulis commit rilis | `github-actions[bot]` | pemilik token |
+| CI di PR rilis | **tidak jalan otomatis**, harus di-approve manual | jalan otomatis |
+
+Sebabnya aturan anti-rekursi GitHub: PR yang dibuat memakai `GITHUB_TOKEN`
+bawaan tidak memicu workflow lain, sehingga `ci`/`build`/`commitlint` diam di
+PR rilis. Dokumentasi release-please menganjurkan PAT justru untuk alasan ini.
+
+Workflow tetap berfungsi tanpa secret (jatuh ke `github.token`), tetapi PR
+rilisnya harus di-approve manual setiap kali.
+
+Membuatnya: buat **fine-grained PAT** dengan izin *Contents: Read and write*,
+*Pull requests: Read and write*, dan *Workflows: Read and write*, lalu
+
+```bash
+gh secret set RELEASE_PLEASE_TOKEN -R ghiyatsa/ruangbaca-kiosk
+```
+
+> PAT punya masa berlaku. Catat tanggal kedaluwarsanya: bila lewat, rilis
+> berikutnya gagal tanpa peringatan.
+
 ### Pemeriksaan otomatis (CI)
 
 | Workflow | Isi |
