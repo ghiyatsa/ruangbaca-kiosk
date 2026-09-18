@@ -11,11 +11,81 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Mengelola version.txt, CHANGELOG.md, tag, dan GitHub Release.
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Open or Update Release PR
+        id: release
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
           release-type: simple
+
+  # Melampirkan zip siap pasang ke rilis yang baru dibuat.
+  #
+  # Sengaja digabung ke workflow ini, BUKAN sebagai workflow terpisah dengan
+  # pemicu `on: release: published`. GitHub tidak menjalankan workflow dari
+  # event yang disebabkan oleh GITHUB_TOKEN (anti-rekursi), sehingga rilis yang
+  # dibuat release-please tidak akan memicu workflow terpisah — zip tidak
+  # pernah terlampir. Karena rilis dibuat di dalam workflow ini juga, `if`
+  # di bawah tidak terkena batasan tersebut.
+  release-assets:
+    needs: release-please
+    if: ${{ needs['release-please'].outputs.release_created == 'true' }}
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout kode pada tag rilis
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs['release-please'].outputs.tag_name }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build Windows Release
+        run: flutter build windows --release
+
+      - name: Verify Release Artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          release="build/windows/x64/runner/Release"
+          test -f "$release/ruangbaca_kiosk.exe" || { echo "exe tidak ditemukan"; exit 1; }
+          test -f "$release/data/app.so" || { echo "data/app.so tidak ditemukan"; exit 1; }
+          test -d "$release/data" || { echo "folder data tidak ditemukan"; exit 1; }
+          ls -la "$release"
+
+      # Zip TIDAK memuat config/ (folder itu tidak pernah dibuat oleh
+      # `flutter build`), sehingga mengekstraknya ke folder dist tidak akan
+      # menimpa config/kiosk.json milik mesin kiosk.
+      - name: Paketkan menjadi zip
+        shell: pwsh
+        run: |
+          $tag = "${{ needs['release-please'].outputs.tag_name }}"
+          $zip = "ruangbaca-kiosk-$tag-windows-x64.zip"
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath $zip -Force
+          Get-Item $zip | Select-Object Name, Length
+
+      - name: Lampirkan ke Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${{ needs['release-please'].outputs.tag_name }}"
+          zip="ruangbaca-kiosk-${tag}-windows-x64.zip"
+          gh release upload "$tag" "$zip" --clobber
+          echo "Terlampir ke rilis $tag:"
+          gh release view "$tag" --json assets --jq '.assets[] | "  - \(.name) (\(.size) bytes)"'

@@ -1,23 +1,25 @@
 name: release-assets
 
-# Melampirkan hasil build Windows ke GitHub Release, supaya setiap rilis
-# punya berkas yang benar-benar dapat diunduh dan dipasang di mesin kiosk.
+# Alat cadangan (fallback): melampirkan zip Windows ke rilis yang SUDAH ada.
 #
-# Sengaja dipisah dari build.yml: build.yml memverifikasi bahwa kode dapat
-# dibangun (cepat, tiap push/PR); workflow ini menghasilkan artefak rilis
-# hanya ketika ada rilis baru.
+# Alur normal TIDAK memakai workflow ini. Rilis dibuat oleh release-please, dan
+# GitHub tidak menjalankan workflow dari event yang disebabkan GITHUB_TOKEN
+# (anti-rekursi) — jadi `on: release: published` tidak pernah terpicu oleh
+# rilis buatan release-please. Karena itu build + upload aset dilakukan di
+# dalam release-please.yml (job `release-assets`).
+#
+# Workflow ini hanya untuk keadaan darurat, mis. zip gagal terlampir atau perlu
+# dibuat ulang untuk rilis lama. Jalankan manual dari tab Actions.
 #
 # Catatan penting: zip yang dihasilkan TIDAK memuat config/kiosk.json
 # (folder config/ tidak pernah dibuat oleh `flutter build`). Jadi memasang
 # zip ini ke folder dist TIDAK akan menimpa konfigurasi mesin kiosk.
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag rilis tujuan (mis. v1.0.0)"
+        description: "Tag rilis tujuan (mis. v1.1.0)"
         required: true
         type: string
 
