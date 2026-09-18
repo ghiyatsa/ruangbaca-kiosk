@@ -1,0 +1,87 @@
+name: release-assets
+
+# Melampirkan hasil build Windows ke GitHub Release, supaya setiap rilis
+# punya berkas yang benar-benar dapat diunduh dan dipasang di mesin kiosk.
+#
+# Sengaja dipisah dari build.yml: build.yml memverifikasi bahwa kode dapat
+# dibangun (cepat, tiap push/PR); workflow ini menghasilkan artefak rilis
+# hanya ketika ada rilis baru.
+#
+# Catatan penting: zip yang dihasilkan TIDAK memuat config/kiosk.json
+# (folder config/ tidak pernah dibuat oleh `flutter build`). Jadi memasang
+# zip ini ke folder dist TIDAK akan menimpa konfigurasi mesin kiosk.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag rilis tujuan (mis. v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release-assets:
+    runs-on: windows-latest
+    steps:
+      - name: Tentukan tag
+        id: tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${{ github.event.release.tag_name || inputs.tag }}"
+          test -n "$tag" || { echo "tag kosong"; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Tag rilis: $tag"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build Windows Release
+        run: flutter build windows --release
+
+      - name: Verify Release Artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          release="build/windows/x64/runner/Release"
+          test -f "$release/ruangbaca_kiosk.exe" || { echo "exe tidak ditemukan"; exit 1; }
+          test -f "$release/data/app.so" || { echo "data/app.so tidak ditemukan"; exit 1; }
+          test -d "$release/data" || { echo "folder data tidak ditemukan"; exit 1; }
+          ls -la "$release"
+
+      - name: Paketkan menjadi zip
+        shell: pwsh
+        run: |
+          $tag = "${{ steps.tag.outputs.tag }}"
+          $zip = "ruangbaca-kiosk-$tag-windows-x64.zip"
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath $zip -Force
+          Get-Item $zip | Select-Object Name, Length
+          Write-Host "zip dibuat: $zip"
+
+      - name: Lampirkan ke Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.tag.outputs.tag }}"
+          zip="ruangbaca-kiosk-${tag}-windows-x64.zip"
+          gh release upload "$tag" "$zip" --clobber
+          echo "Terlampir ke rilis $tag:"
+          gh release view "$tag" --json assets --jq '.assets[] | "  - \(.name) (\(.size) bytes)"'
