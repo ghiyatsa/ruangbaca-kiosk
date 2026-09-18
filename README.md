@@ -308,7 +308,11 @@ Hasil build dan folder yang dijalankan di mesin kiosk sengaja dipisah:
 | Lokasi | Peran |
 | --- | --- |
 | `E:\ruangbaca\ruangbaca-kiosk` | kode sumber + hasil build (`build/…/Release`) |
-| `D:\kiosk-dist` | instalasi yang dijalankan di mesin kiosk (exe + DLL + `data/` + `config/`) |
+| `E:\ruangbaca\kiosk-dist` | instalasi yang dijalankan di mesin kiosk (exe + DLL + `data/` + `config/`) |
+
+Keduanya berada di drive `E:` dan satu grup dengan project. Folder dist sengaja
+**di luar** repo (bukan di dalam `ruangbaca-kiosk`) karena memuat
+`config/kiosk.json` berisi API key — jangan sampai ikut ter-commit.
 
 Folder dist berisi `config/kiosk.json` yang **spesifik untuk mesin itu** dan
 tidak ada di folder hasil build. Karena itu deploy dilakukan dengan skrip yang
@@ -322,7 +326,7 @@ flutter build windows --release
 powershell -ExecutionPolicy Bypass -File tool\deploy.ps1
 
 # 3. jalankan
-D:\kiosk-dist\ruangbaca_kiosk.exe
+E:\ruangbaca\kiosk-dist\ruangbaca_kiosk.exe
 ```
 
 Skrip `tool/deploy.ps1`:
@@ -338,5 +342,5 @@ Skrip `tool/deploy.ps1`:
 > Dart terkompilasi ada di `data/app.so`. Membandingkan exe saja bisa
 > menyimpulkan "sudah terbaru" padahal dist tertinggal beberapa build.
 >
-> Jika ingin dist berada di drive lain (mis. `E:\kiosk-dist`), cukup jalankan:
-> `tool\deploy.ps1 -Dest "E:\kiosk-dist"`
+> Untuk menaruh dist di lokasi lain, gunakan `-Dest`:
+> `tool\deploy.ps1 -Dest "D:\kiosk-dist"`
