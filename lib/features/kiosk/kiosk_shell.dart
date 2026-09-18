@@ -13,6 +13,7 @@ import '../member/member_form.dart';
 import '../return/return_form.dart';
 import '../visit/visit_form.dart';
 import 'attract_screen.dart';
+import 'kiosk_exit.dart';
 import 'kiosk_menu.dart';
 import 'kiosk_shortcut.dart';
 
@@ -123,7 +124,12 @@ class _MenuPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              const RuangBacaLogo(size: 38),
+              // Tekan lama logo = satu-satunya jalan keluar yang disengaja,
+              // supaya teknisi tidak perlu mematikan paksa prosesnya.
+              GestureDetector(
+                onLongPress: kioskExitGuard.prompt,
+                child: const RuangBacaLogo(size: 38),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
