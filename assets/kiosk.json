@@ -1,0 +1,10 @@
+{
+  "baseUrl": "http://localhost:8000",
+  "apiKey": "",
+  "deviceToken": "",
+  "deviceName": "Kiosk Ruang Baca Lt.1",
+  "idleTimeoutSeconds": 90,
+  "kioskMode": true,
+  "enableWebcamScanner": true,
+  "requestTimeoutSeconds": 25
+}

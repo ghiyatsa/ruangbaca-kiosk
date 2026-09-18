@@ -52,9 +52,10 @@ node_modules/
 .husky/_/
 
 # Konfigurasi lokal: JANGAN commit (memuat API key produksi).
-# Contoh yang aman ada di config/kiosk.example.json
-config/kiosk.json
-kiosk.json
+# Pola diawali "/" agar hanya mengecualikan berkas di akar repo —
+# assets/kiosk.json (nilai bawaan saat dibangun) TETAP ikut di-commit.
+/config/kiosk.json
+/kiosk.json
 *.bak
 
 # Berkas sementara alat bantu
