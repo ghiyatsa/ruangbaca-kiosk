@@ -17,7 +17,7 @@ concurrency:
 jobs:
   # Membuktikan aplikasi benar-benar dapat dibangun sebagai rilis Windows,
   # bukan sekadar lolos analisis statis.
-  quality:
+  build:
     runs-on: windows-latest
     steps:
       - name: Checkout code
