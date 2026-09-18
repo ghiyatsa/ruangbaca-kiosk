@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../core/brand.dart';
 import '../../core/theme.dart';
 import '../../models/models.dart';
+import '../../widgets/ruangbaca_logo.dart';
 
 /// Layar tarik (attract) yang tampil saat tidak ada menu terpilih.
 class AttractScreen extends StatefulWidget {
@@ -59,19 +60,7 @@ class _AttractScreenState extends State<AttractScreen> {
             child: _OpenBadge(session: session),
           ),
           const Spacer(),
-          Container(
-            width: 76,
-            height: 76,
-            decoration: BoxDecoration(
-              color: KioskTheme.primary.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: const Icon(
-              Icons.menu_book_rounded,
-              color: KioskTheme.primary,
-              size: 40,
-            ),
-          ),
+          const RuangBacaLogo(size: 76),
           const SizedBox(height: 20),
           Text(
             '$_greeting, Silakan Mulai',

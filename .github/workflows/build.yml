@@ -41,5 +41,18 @@ jobs:
           set -euo pipefail
           release="build/windows/x64/runner/Release"
           test -f "$release/ruangbaca_kiosk.exe" || { echo "exe tidak ditemukan"; exit 1; }
+          test -f "$release/data/app.so" || { echo "data/app.so tidak ditemukan"; exit 1; }
           test -d "$release/data" || { echo "folder data tidak ditemukan"; exit 1; }
           ls -la "$release"
+
+      # Simpan hasil build sebagai artefak Actions supaya dapat diunduh
+      # untuk pengujian tanpa harus membangun ulang secara lokal.
+      # Artefak ini TIDAK masuk riwayat git (lihat .gitignore) dan berbeda
+      # dari aset rilis resmi yang dilampirkan oleh workflow release-assets.
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ruangbaca-kiosk-windows-x64
+          path: build/windows/x64/runner/Release
+          if-no-files-found: error
+          retention-days: 14
