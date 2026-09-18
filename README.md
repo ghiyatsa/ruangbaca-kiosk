@@ -280,3 +280,63 @@ flutter analyze          # analisis statis
 flutter test             # unit & widget test
 npm run commitlint       # periksa pesan commit terakhir
 ```
+
+### Aset rilis
+
+Setiap GitHub Release menyertakan berkas siap pasang:
+
+```
+ruangbaca-kiosk-vX.Y.Z-windows-x64.zip
+```
+
+Zip tersebut berisi **isi `build/windows/x64/runner/Release/`** (exe, DLL, dan
+folder `data/`), dan **tidak** memuat `config/` — sehingga mengekstraknya ke
+folder dist tidak akan menimpa `config/kiosk.json` milik mesin kiosk.
+
+Selain itu, setiap push ke `main` menyimpan hasil build sebagai **artefak
+Actions** (`ruangbaca-kiosk-windows-x64`, disimpan 14 hari) yang dapat diunduh
+dari halaman run untuk keperluan pengujian.
+
+> Hasil build **tidak** di-commit ke git (lihat `.gitignore` → `/build/`).
+> Biner berukuran ~31 MB dan dapat dibangun ulang, sehingga tempatnya adalah
+> aset rilis/artefak, bukan riwayat git.
+
+## 11. Deploy ke mesin kiosk
+
+Hasil build dan folder yang dijalankan di mesin kiosk sengaja dipisah:
+
+| Lokasi | Peran |
+| --- | --- |
+| `E:\ruangbaca\ruangbaca-kiosk` | kode sumber + hasil build (`build/…/Release`) |
+| `D:\kiosk-dist` | instalasi yang dijalankan di mesin kiosk (exe + DLL + `data/` + `config/`) |
+
+Folder dist berisi `config/kiosk.json` yang **spesifik untuk mesin itu** dan
+tidak ada di folder hasil build. Karena itu deploy dilakukan dengan skrip yang
+menyalin isi hasil build **tanpa menyentuh `config/`**:
+
+```powershell
+# 1. bangun
+flutter build windows --release
+
+# 2. deploy (menyalin + memverifikasi, config tidak tertimpa)
+powershell -ExecutionPolicy Bypass -File tool\deploy.ps1
+
+# 3. jalankan
+D:\kiosk-dist\ruangbaca_kiosk.exe
+```
+
+Skrip `tool/deploy.ps1`:
+
+1. memastikan `ruangbaca_kiosk.exe` dan `data/app.so` ada di hasil build;
+2. menghentikan kiosk yang sedang berjalan;
+3. menyalin isi hasil build ke folder dist;
+4. membuat `config/kiosk.json` dari template **hanya bila belum ada**;
+5. memverifikasi MD5 `data/app.so` di dist sama dengan hasil build.
+
+> **Verifikasi wajib `data/app.so`, bukan `ruangbaca_kiosk.exe`.** Exe hanyalah
+> kerangka runner Windows dan hampir tidak berubah antar build, sedangkan kode
+> Dart terkompilasi ada di `data/app.so`. Membandingkan exe saja bisa
+> menyimpulkan "sudah terbaru" padahal dist tertinggal beberapa build.
+>
+> Jika ingin dist berada di drive lain (mis. `E:\kiosk-dist`), cukup jalankan:
+> `tool\deploy.ps1 -Dest "E:\kiosk-dist"`

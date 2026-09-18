@@ -11,8 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
-
   # HTTP client ke API kiosk Laravel.
   http: ^1.5.0
 
