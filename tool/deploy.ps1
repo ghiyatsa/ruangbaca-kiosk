@@ -5,7 +5,7 @@
 #
 # Pemakaian:
 #   powershell -ExecutionPolicy Bypass -File tool\deploy.ps1
-#   powershell -ExecutionPolicy Bypass -File tool\deploy.ps1 -Dest "E:\kiosk-dist"
+#   powershell -ExecutionPolicy Bypass -File tool\deploy.ps1 -Dest "D:\kiosk-dist"
 #
 # Alur: flutter build windows --release  ->  tool\deploy.ps1  ->  jalankan exe di dist
 
