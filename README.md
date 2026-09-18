@@ -17,7 +17,7 @@ kredensial perangkat.
 
 | Layanan | Menu | Alur |
 | --- | --- | --- |
-| Buku Tamu | `Alt+1` | Isi identitas → pilih jenis pengunjung & keperluan → kirim |
+| Buku Tamu | `Alt+1` | Anggota: scan Member Key → tercatat. Umum: isi identitas → pilih jenis pengunjung & keperluan → kirim |
 | Daftar Anggota | `Alt+2` | Isi identitas → kirim → **tunjukkan QR** ke pemindai |
 | Pinjam Buku | `Alt+3` | Masukkan identitas anggota → cari & pilih buku → **scan Member Key** |
 | Kembalikan Buku | `Alt+4` | Masukkan identitas anggota → pilih buku aktif → **scan Member Key** |
