@@ -19,9 +19,9 @@ migrate_working_dir/
 .idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VS Code. Berkasnya memuat path lokal (mis. cmake.sourceDirectory) yang tidak
+# berlaku untuk mesin lain, jadi tidak di-commit.
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
