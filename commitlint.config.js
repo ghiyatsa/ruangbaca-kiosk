@@ -1,0 +1,42 @@
+export default {
+    extends: ['@commitlint/config-conventional'],
+    rules: {
+        'scope-enum': [
+            1,
+            'always',
+            [
+                'a11y',
+                'api',
+                'borrow',
+                'build',
+                'ci',
+                'config',
+                'deps',
+                'github',
+                'kiosk',
+                'member',
+                'return',
+                'shortcut',
+                'toast',
+                'ui',
+                'visit',
+            ],
+        ],
+        'type-enum': [
+            2,
+            'always',
+            [
+                'build',
+                'chore',
+                'ci',
+                'docs',
+                'feat',
+                'fix',
+                'perf',
+                'refactor',
+                'revert',
+                'test',
+            ],
+        ],
+    },
+};

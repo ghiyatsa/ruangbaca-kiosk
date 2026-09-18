@@ -1,0 +1,10 @@
+{
+  "baseUrl": "https://ruangbacainformatika.unimal.ac.id",
+  "apiKey": "rbk_GANTI_DENGAN_API_KEY_DARI_SERVER",
+  "deviceToken": "",
+  "deviceName": "Ruang Baca Informatika",
+  "idleTimeoutSeconds": 90,
+  "kioskMode": true,
+  "enableWebcamScanner": true,
+  "requestTimeoutSeconds": 25
+}

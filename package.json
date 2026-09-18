@@ -1,0 +1,26 @@
+{
+  "name": "ruangbaca-kiosk",
+  "private": true,
+  "type": "module",
+  "description": "Perkakas pengembangan untuk aplikasi kiosk Ruang Baca Informatika",
+  "scripts": {
+    "commitlint": "commitlint --last --verbose",
+    "format": "dart format .",
+    "format:check": "dart format --output=none --set-exit-if-changed .",
+    "lint": "flutter analyze",
+    "test": "flutter test",
+    "build": "flutter build windows --release",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0"
+  },
+  "lint-staged": {
+    "*.dart": [
+      "dart format"
+    ]
+  }
+}

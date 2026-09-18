@@ -1,0 +1,30 @@
+# Normalkan semua berkas teks ke LF di repositori.
+* text=auto eol=lf
+
+# Berkas Windows wajib CRLF (skrip .bat gagal bila memakai LF).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.rc text eol=crlf
+*.manifest text eol=crlf
+
+# Berkas biner: jangan pernah diubah.
+*.dll binary
+*.exe binary
+*.pdb binary
+*.so binary
+*.dat binary
+*.png binary
+*.ico binary
+*.ttf binary
+*.otf binary
+
+*.dart diff=dart
+*.json diff=json
+*.md diff=markdown
+*.yaml diff=yaml
+*.yml diff=yaml
+
+CHANGELOG.md export-ignore
+README.md export-ignore
+.github/ export-ignore
