@@ -17,12 +17,10 @@ enum KioskStatus {
   error,
 }
 
-/// State pusat aplikasi kiosk.
+/// State pusat aplikasi kiosk: data bootstrap, sesi, dan aksi yang memanggil
+/// API. Widget membacanya lewat `provider`.
 ///
-/// Menyimpan data bootstrap, sesi, dan menyediakan aksi yang memanggil API.
-/// Widget membaca state ini lewat `provider`.
-///
-/// Autentikasi memakai API key permanen, sehingga tidak ada alur aktivasi/PIN.
+/// Autentikasi memakai API key permanen, jadi tidak ada alur aktivasi/PIN.
 class KioskController extends ChangeNotifier {
   /// [api] hanya dipakai pengujian untuk menyuntikkan klien HTTP tiruan.
   KioskController({required AppConfig config, KioskApi? api})

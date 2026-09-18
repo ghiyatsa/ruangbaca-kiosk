@@ -8,7 +8,7 @@ import '../../core/theme.dart';
 import '../../models/models.dart';
 import '../../widgets/ruangbaca_logo.dart';
 
-/// Layar tarik (attract) yang tampil saat tidak ada menu terpilih.
+/// Layar tarik yang tampil saat tidak ada menu terpilih.
 class AttractScreen extends StatefulWidget {
   const AttractScreen({super.key, required this.session, required this.stats});
 

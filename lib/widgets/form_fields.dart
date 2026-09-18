@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Label + isi untuk satu field form kiosk.
+/// Label dan isi untuk satu field form kiosk.
 class KioskField extends StatelessWidget {
   const KioskField({
     super.key,

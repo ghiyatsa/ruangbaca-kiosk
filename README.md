@@ -22,15 +22,13 @@ kredensial perangkat.
 | Pinjam Buku | `Alt+3` | Masukkan identitas anggota → cari & pilih buku → **scan Member Key** |
 | Kembalikan Buku | `Alt+4` | Masukkan identitas anggota → pilih buku aktif → **scan Member Key** |
 
-Semua alur meniru persis alur kiosk web (`resources/js/features/kiosk`) agar
-pengalaman pengguna konsisten.
+Alur setiap layanan dibuat konsisten satu sama lain.
 
 ### Notifikasi hasil aksi
 
 Setelah aksi berhasil (pinjam, kembali, kunjungan), kiosk menampilkan
-**notifikasi ringan (toast)** yang **hilang sendiri** setelah 5 detik —
-tidak ada tombol "Selesai" yang perlu ditekan, sehingga alur kiosk tetap
-mengalir. Ini meniru `toast.success` pada kiosk web (`sonner`).
+notifikasi ringan (toast) yang hilang sendiri setelah 5 detik. Tidak ada
+tombol "Selesai" yang perlu ditekan, sehingga alur kiosk tetap mengalir.
 
 Toast tidak menangkap sentuhan, jadi kolom isian dan tombol di belakangnya
 tetap dapat dipakai selama toast tampil. Galat tetap ditampilkan sebagai

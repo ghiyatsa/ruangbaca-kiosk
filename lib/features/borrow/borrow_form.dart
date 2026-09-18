@@ -12,9 +12,9 @@ import '../../widgets/form_fields.dart';
 import '../../widgets/kiosk_toast.dart';
 import '../../widgets/member_key_dialog.dart';
 
-/// Layanan Pinjam Buku — peminjaman mandiri di kiosk.
+/// Layanan Pinjam Buku: peminjaman mandiri di kiosk.
 ///
-/// Alur: masukkan identitas → pilih buku → scan Member Key (QR) → kirim.
+/// Alur: masukkan identitas, pilih buku, scan Member Key, lalu kirim.
 class BorrowForm extends StatefulWidget {
   const BorrowForm({super.key, required this.loanMaxBooks});
 
@@ -194,7 +194,7 @@ class _BorrowFormState extends State<BorrowForm> {
   }
 }
 
-/// Panel daftar buku terpilih (dipakai bersama alur pinjam).
+/// Panel daftar buku terpilih, dipakai bersama alur pinjam.
 class _SelectedBooksPanel extends StatelessWidget {
   const _SelectedBooksPanel({
     required this.books,

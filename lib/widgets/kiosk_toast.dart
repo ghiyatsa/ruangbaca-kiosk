@@ -2,30 +2,25 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-/// Nada (tone) notifikasi kiosk.
+/// Nada notifikasi kiosk.
 enum KioskToastTone { success, info, warning, error }
 
-/// Notifikasi ringan (toast) yang **menutup sendiri**.
+/// Notifikasi ringan (toast) yang menutup sendiri setelah [duration].
 ///
 /// Dipakai sebagai pengganti dialog sukses: setelah aksi berhasil (pinjam,
-/// kembali, kunjungan), pengguna tidak perlu menekan tombol "Selesai" — toast
-/// hilang otomatis setelah [duration]. Ini meniru `toast.success` pada kiosk
-/// web (`sonner`), sehingga alur kiosk tetap mengalir tanpa klik tambahan.
-///
-/// Toast tidak menangkap sentuhan (`IgnorePointer`) agar tidak pernah
-/// menghalangi kolom isian atau tombol di belakangnya.
+/// kembali, kunjungan) pengguna tidak perlu menekan tombol "Selesai", jadi
+/// alur kiosk tetap mengalir. Toast tidak menangkap sentuhan, sehingga kolom
+/// isian dan tombol di belakangnya tetap bisa dipakai.
 class KioskToast {
   const KioskToast._();
 
   /// Durasi tampil bawaan.
   static const Duration defaultDuration = Duration(seconds: 5);
 
-  /// Toast yang sedang tampil, agar toast baru menggantikan yang lama
-  /// alih-alih menumpuk.
+  /// Toast yang sedang tampil; toast baru menggantikan yang lama.
   static OverlayEntry? _current;
 
-  /// Tampilkan toast. Tidak melakukan apa pun bila [context] sudah tidak
-  /// terpasang pada overlay.
+  /// Tampilkan toast; diabaikan bila [context] tidak lagi punya overlay.
   static void show(
     BuildContext context, {
     required String title,

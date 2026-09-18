@@ -26,12 +26,12 @@ Future<void> main() async {
   runApp(KioskApp(controller: controller));
 }
 
-/// Konfigurasi jendela mode kiosk: layar penuh, selalu di atas, dan menahan
-/// tombol tutup jendela.
+/// Menyiapkan jendela mode kiosk: layar penuh, selalu di atas, dan menahan
+/// tombol tutup.
 ///
-/// Penahanan tombol tutup wajib dipasang di sini (bukan di dalam widget),
-/// karena `windowManager` sudah siap sebelum UI dibangun — sehingga klik X
-/// atau Alt+F4 pada saat mana pun tidak langsung mematikan aplikasi.
+/// Penjagaan dipasang di sini, bukan di dalam widget, karena `windowManager`
+/// sudah siap sebelum UI dibangun; dengan begitu klik X dan Alt+F4 tidak
+/// langsung mematikan aplikasi.
 Future<void> _setupKioskWindow() async {
   await windowManager.ensureInitialized();
 

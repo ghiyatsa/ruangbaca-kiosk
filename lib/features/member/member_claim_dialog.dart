@@ -12,8 +12,8 @@ import '../../widgets/feedback.dart';
 
 /// Dialog QR penautan akun Google untuk registrasi anggota.
 ///
-/// Menampilkan QR (SVG dari server), hitung mundur kedaluwarsa, dan melakukan
-/// polling status setiap 3 detik hingga berhasil / kedaluwarsa.
+/// Menampilkan QR dari server, hitung mundur kedaluwarsa, dan polling status
+/// tiap 3 detik sampai berhasil atau kedaluwarsa.
 class MemberClaimDialog extends StatefulWidget {
   const MemberClaimDialog({
     super.key,
@@ -102,8 +102,8 @@ class _MemberClaimDialogState extends State<MemberClaimDialog> {
       if (updated == null) {
         // Endpoint status memerlukan device token. Bila kiosk hanya memakai
         // API key, server mengembalikan `claim: null` walaupun pendaftaran
-        // berjalan. Jangan anggap kedaluwarsa — biarkan hitung mundur lokal
-        // yang menentukan, dan lanjutkan polling.
+        // berjalan. Jangan anggap kedaluwarsa; biarkan hitung mundur lokal
+        // yang menentukan, lalu lanjutkan polling.
         return;
       }
 

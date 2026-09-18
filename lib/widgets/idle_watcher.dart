@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-/// Membungkus layar dan memanggil [onIdle] setelah [timeout] tanpa aktivitas
-/// pointer/keyboard. Dipakai untuk kembali ke layar utama secara otomatis.
+/// Memanggil [onIdle] setelah [timeout] tanpa aktivitas pointer/keyboard,
+/// untuk kembali ke layar utama secara otomatis.
 class IdleWatcher extends StatefulWidget {
   const IdleWatcher({
     super.key,

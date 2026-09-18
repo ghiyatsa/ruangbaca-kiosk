@@ -20,7 +20,7 @@ class QrWebcamScanner extends StatefulWidget {
 
   final ValueChanged<String> onDetected;
 
-  /// Bila `false`, kamera tidak dijalankan (hemat resource).
+  /// Bila `false`, kamera tidak dijalankan untuk menghemat resource.
   final bool active;
 
   final String overlayHint;

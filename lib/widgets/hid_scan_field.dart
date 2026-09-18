@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Kolom input untuk scanner QR HID/USB (yang berperilaku seperti keyboard).
+/// Kolom input untuk scanner QR HID/USB, yang berperilaku seperti keyboard.
 ///
-/// Scanner HID mengetikkan isi QR lalu menekan Enter. Widget ini menangkap
-/// Enter sebagai sinyal "QR selesai" dan memanggil [onSubmit].
+/// Scanner mengetikkan isi QR lalu menekan Enter; Enter di sini dianggap
+/// sinyal "QR selesai" dan memanggil [onSubmit].
 class HidScanField extends StatefulWidget {
   const HidScanField({
     super.key,

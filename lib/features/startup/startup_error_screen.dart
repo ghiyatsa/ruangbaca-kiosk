@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
 
-/// Layar galat saat inisialisasi gagal total (mis. server tidak dapat dihubungi).
+/// Layar galat saat inisialisasi gagal total, mis. server tidak dapat
+/// dihubungi.
 class StartupErrorScreen extends StatelessWidget {
   const StartupErrorScreen({
     super.key,
