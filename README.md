@@ -24,6 +24,16 @@ kredensial perangkat.
 
 Alur setiap layanan dibuat konsisten satu sama lain.
 
+### Pencarian buku (Pinjam Buku)
+
+Dialog pencarian buku memakai **mesin pencarian global yang sama dengan situs web**:
+
+- **Ranking relevansi** — judul yang persis/berawalan kata kunci tampil lebih dulu.
+- **Koreksi ejaan** — bila kata kunci salah ketik menghasilkan terlalu sedikit hasil, server mencari versi terkoreksi dan kiosk menampilkan "Menampilkan hasil untuk …".
+- **Saran kata kunci** — chip saran di bawah kolom pencarian; mengetuknya mengulang pencarian dengan kata kunci tersebut.
+
+Saran dibatasi pada **koleksi buku** saja. Kiosk adalah perangkat publik tanpa sesi anggota, sehingga karya ilmiah (skripsi/thesis) tidak pernah muncul dan **tidak ada riwayat pencarian** yang tersimpan.
+
 ### Notifikasi hasil aksi
 
 Setelah aksi berhasil (pinjam, kembali, kunjungan), kiosk menampilkan
