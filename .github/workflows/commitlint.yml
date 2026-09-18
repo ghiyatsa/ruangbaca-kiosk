@@ -37,4 +37,12 @@ jobs:
 
       - name: Check Pushed Commit Messages
         if: github.event_name == 'push'
-        run: npx commitlint --from ${{ github.event.before }} --to ${{ github.event.sha }} --verbose
+        run: |
+          from="${{ github.event.before }}"
+          # Push pertama sebuah branch: `before` berisi semua nol, sehingga
+          # rentang tidak valid. Periksa commit terakhir saja.
+          if [ -z "$from" ] || [ "$from" = "0000000000000000000000000000000000000000" ]; then
+            npx commitlint --last --verbose
+          else
+            npx commitlint --from "$from" --to "${{ github.sha }}" --verbose
+          fi
