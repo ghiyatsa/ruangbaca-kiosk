@@ -147,11 +147,18 @@ perlu kebijakan sistem (kiosk mode Windows / akun terbatas).
 Di server Laravel:
 
 ```bash
-php artisan kiosk:api-key --name="Kiosk Lt.1"
+php artisan kiosk:api-key generate
 ```
 
-Tempelkan nilai yang keluar ke `apiKey` pada berkas konfigurasi. API key bersifat
-**permanen** — kiosk tidak memerlukan PIN maupun aktivasi perangkat.
+Plaintext key hanya ditampilkan **sekali** saat dibuat. Salin nilai tersebut ke
+`apiKey` pada berkas konfigurasi. API key bersifat **permanen** — kiosk tidak
+memerlukan PIN maupun aktivasi perangkat. Untuk mengelola key:
+
+```bash
+php artisan kiosk:api-key show      # cek status
+php artisan kiosk:api-key generate  # buat / rotasi
+php artisan kiosk:api-key revoke    # cabut akses
+```
 
 ---
 
