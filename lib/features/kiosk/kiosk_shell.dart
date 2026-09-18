@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/brand.dart';
 import '../../core/theme.dart';
 import '../../state/kiosk_controller.dart';
 import '../../widgets/idle_watcher.dart';
 import '../../widgets/kiosk_toast.dart';
+import '../../widgets/ruangbaca_logo.dart';
 import '../borrow/borrow_form.dart';
 import '../member/member_form.dart';
 import '../return/return_form.dart';
@@ -119,6 +121,37 @@ class _MenuPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Row(
+            children: [
+              const RuangBacaLogo(size: 38),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      Brand.name,
+                      style: const TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1E2233),
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Layanan Mandiri',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Color(0xFF9CA3AF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
           for (final menu in KioskMenu.values) ...[
             _MenuButton(
               menu: menu,
