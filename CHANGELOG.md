@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.1.0...v1.2.0) (2026-09-18)
+
+
+### Features
+
+* **kiosk:** tahan tombol tutup jendela + buku tamu cepat via Member Key ([#7](https://github.com/ghiyatsa/ruangbaca-kiosk/issues/7)) ([db289e0](https://github.com/ghiyatsa/ruangbaca-kiosk/commit/db289e03888fbee4726bb6c7ddd9bf01ecde9527))
+
 ## [1.1.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.0.0...v1.1.0) (2026-09-18)
 
 
