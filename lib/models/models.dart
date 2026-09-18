@@ -216,6 +216,49 @@ class KioskBook {
   }
 }
 
+/// Hasil pencarian buku (`GET /api/kiosk/books/search`).
+///
+/// Berisi daftar buku, saran kata kunci, dan query terkoreksi (bila ejaan
+/// asli diperbaiki server).
+class KioskBookSearchResult {
+  const KioskBookSearchResult({
+    this.books = const <KioskBook>[],
+    this.suggestions = const <String>[],
+    this.correctedQuery,
+  });
+
+  final List<KioskBook> books;
+  final List<String> suggestions;
+  final String? correctedQuery;
+
+  factory KioskBookSearchResult.fromJson(Map<String, dynamic> json) {
+    final rawBooks = json['books'];
+    final books = <KioskBook>[];
+    if (rawBooks is List) {
+      for (final item in rawBooks) {
+        if (item is Map) {
+          books.add(KioskBook.fromJson(item.cast<String, dynamic>()));
+        }
+      }
+    }
+
+    final rawSuggestions = json['suggestions'];
+    final suggestions = <String>[];
+    if (rawSuggestions is List) {
+      for (final item in rawSuggestions) {
+        final text = _asStringOrNull(item);
+        if (text != null) suggestions.add(text);
+      }
+    }
+
+    return KioskBookSearchResult(
+      books: books,
+      suggestions: suggestions,
+      correctedQuery: _asStringOrNull(json['corrected_query']),
+    );
+  }
+}
+
 /// Anggota (hasil pencarian ringkas, tanpa email penuh).
 class KioskMemberPreview {
   const KioskMemberPreview({

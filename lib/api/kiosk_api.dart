@@ -240,10 +240,11 @@ class KioskApi {
 
   /// Cari buku.
   ///
-  /// - `mode = borrow`: kata kunci bebas.
+  /// - `mode = borrow`: kata kunci bebas; server mengembalikan hasil berperingkat,
+  ///   saran kata kunci, dan query terkoreksi bila ada salah eja.
   /// - `mode = return`: wajib menyertakan `memberIdentifier`; mengembalikan
   ///   buku yang sedang dipinjam anggota tersebut.
-  Future<List<KioskBook>> searchBooks({
+  Future<KioskBookSearchResult> searchBooks({
     String query = '',
     String mode = 'borrow',
     String? memberIdentifier,
@@ -258,14 +259,7 @@ class KioskApi {
           'member_identifier': memberIdentifier,
       },
     );
-    final raw = json['books'];
-    if (raw is List) {
-      return raw
-          .whereType<Map>()
-          .map((item) => KioskBook.fromJson(item.cast<String, dynamic>()))
-          .toList(growable: false);
-    }
-    return const <KioskBook>[];
+    return KioskBookSearchResult.fromJson(json);
   }
 
   /// Pinjam buku via QR verifikasi anggota.

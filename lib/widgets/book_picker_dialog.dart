@@ -34,6 +34,8 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
   Timer? _debounce;
 
   List<KioskBook> _results = const <KioskBook>[];
+  List<String> _suggestions = const <String>[];
+  String? _correctedQuery;
   bool _loading = false;
   String? _error;
   late Set<int> _selected;
@@ -61,6 +63,16 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
     });
   }
 
+  /// Terapkan saran kata kunci sebagai query baru, lalu cari ulang.
+  void _applySuggestion(String suggestion) {
+    _debounce?.cancel();
+    _queryController.text = suggestion;
+    _queryController.selection = TextSelection.collapsed(
+      offset: suggestion.length,
+    );
+    unawaited(_search());
+  }
+
   Future<void> _search() async {
     final controller = context.read<KioskController>();
     final query = _queryController.text.trim();
@@ -79,17 +91,19 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
     });
 
     try {
-      final books = await controller.searchBooks(
+      final result = await controller.searchBooks(
         query: query,
         mode: widget.mode,
         memberIdentifier: widget.memberIdentifier,
       );
       if (!mounted) return;
       setState(() {
-        _results = books;
+        _results = result.books;
+        _suggestions = result.suggestions;
+        _correctedQuery = result.correctedQuery;
         _loading = false;
         if (_isReturn) {
-          _selected = books.map((book) => book.id).toSet();
+          _selected = result.books.map((book) => book.id).toSet();
         }
       });
     } on ApiException catch (error) {
@@ -98,6 +112,8 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
         _loading = false;
         _error = error.bestMessage;
         _results = const <KioskBook>[];
+        _suggestions = const <String>[];
+        _correctedQuery = null;
       });
     }
   }
@@ -164,6 +180,14 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
                     prefixIcon: Icon(Icons.search),
                   ),
                 ),
+              if (!_isReturn && _suggestions.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                _SuggestionChips(
+                  suggestions: _suggestions,
+                  correctedQuery: _correctedQuery,
+                  onSelect: _applySuggestion,
+                ),
+              ],
               if (_isReturn)
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -248,6 +272,66 @@ class _BookPickerDialogState extends State<BookPickerDialog> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SuggestionChips extends StatelessWidget {
+  const _SuggestionChips({
+    required this.suggestions,
+    required this.correctedQuery,
+    required this.onSelect,
+  });
+
+  final List<String> suggestions;
+  final String? correctedQuery;
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (correctedQuery != null && correctedQuery!.isNotEmpty) ...[
+          Row(
+            children: [
+              const Icon(
+                Icons.auto_fix_high,
+                size: 15,
+                color: KioskTheme.primary,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  'Menampilkan hasil untuk "$correctedQuery"',
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final suggestion in suggestions)
+              ActionChip(
+                label: Text(suggestion),
+                onPressed: () => onSelect(suggestion),
+                backgroundColor: const Color(0xFFF8F9FC),
+                side: const BorderSide(color: KioskTheme.border),
+                labelStyle: const TextStyle(
+                  fontSize: 12.5,
+                  color: Color(0xFF1E2233),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

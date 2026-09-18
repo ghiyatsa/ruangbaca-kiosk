@@ -73,16 +73,16 @@ class _ReturnFormState extends State<ReturnForm> {
     final controller = context.read<KioskController>();
 
     try {
-      final books = await controller.searchBooks(
+      final result = await controller.searchBooks(
         mode: 'return',
         memberIdentifier: identifier,
       );
       if (!mounted || identifier != _identifier) return;
       setState(() {
-        _borrowedBooks = books;
+        _borrowedBooks = result.books;
         _selectedIds
           ..clear()
-          ..addAll(books.map((book) => book.id));
+          ..addAll(result.books.map((book) => book.id));
         _loadingBooks = false;
       });
     } on ApiException catch (error) {

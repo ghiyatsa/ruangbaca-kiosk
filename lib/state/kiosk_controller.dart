@@ -127,7 +127,7 @@ class KioskController extends ChangeNotifier {
     return result;
   }
 
-  Future<List<KioskBook>> searchBooks({
+  Future<KioskBookSearchResult> searchBooks({
     String query = '',
     String mode = 'borrow',
     String? memberIdentifier,
