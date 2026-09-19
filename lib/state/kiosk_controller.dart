@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../api/api_exception.dart';
@@ -13,8 +15,20 @@ enum KioskStatus {
   /// Siap melayani.
   ready,
 
-  /// Gagal total (mis. API key salah atau server tidak dapat dihubungi).
+  /// Perangkat kiosk tidak dapat menjangkau server.
   error,
+}
+
+/// Kondisi koneksi kiosk ke server, dipantau berkala saat menganggur.
+///
+/// Dinamai `KioskConnectionState`, bukan `ConnectionState`, agar tidak bentrok
+/// dengan enum bawaan Flutter untuk `FutureBuilder`.
+enum KioskConnectionState {
+  /// Hasil pantauan terakhir: server terjangkau.
+  online,
+
+  /// Hasil pantauan terakhir: server tidak terjangkau.
+  offline,
 }
 
 /// State pusat aplikasi kiosk: data bootstrap, sesi, dan aksi yang memanggil
@@ -23,13 +37,24 @@ enum KioskStatus {
 /// Autentikasi memakai API key permanen, jadi tidak ada alur aktivasi/PIN.
 class KioskController extends ChangeNotifier {
   /// [api] hanya dipakai pengujian untuk menyuntikkan klien HTTP tiruan.
-  KioskController({required AppConfig config, KioskApi? api})
-    : _config = config {
+  /// [connectionCheckInterval] memperpendek jeda pantauan koneksi pada uji.
+  KioskController({
+    required AppConfig config,
+    KioskApi? api,
+    Duration? connectionCheckInterval,
+  }) : _config = config,
+       _connectionCheckInterval =
+           connectionCheckInterval ?? const Duration(seconds: 15) {
     _api = api ?? KioskApi(config: config);
   }
 
   final AppConfig _config;
   late final KioskApi _api;
+  final Duration _connectionCheckInterval;
+
+  Timer? _connectionTimer;
+  bool _checking = false;
+  bool _disposed = false;
 
   AppConfig get config => _config;
   KioskApi get api => _api;
@@ -54,6 +79,84 @@ class KioskController extends ChangeNotifier {
   bool get isReady => _status == KioskStatus.ready;
   bool get withinOperatingHours => session.withinOperatingHours;
 
+  KioskConnectionState _connection = KioskConnectionState.online;
+
+  /// Hasil pantauan koneksi terakhir. Selama `online`, UI tidak menampilkan
+  /// apa pun; begitu `offline`, banner peringatan muncul dan aksi tulis
+  /// dinonaktifkan sampai koneksi pulih.
+  KioskConnectionState get connection => _connection;
+
+  bool get isOffline => _connection == KioskConnectionState.offline;
+
+  // ---------------------------------------------------------------------------
+  // Pantauan koneksi
+  // ---------------------------------------------------------------------------
+
+  /// Mulai memeriksa koneksi berkala selama aplikasi siap.
+  ///
+  /// Dipanggil otomatis setelah bootstrap pertama berhasil; aman dipanggil
+  /// berulang (timer lama dibuang lebih dulu).
+  void startConnectionWatch() {
+    _connectionTimer?.cancel();
+    _connection = KioskConnectionState.online;
+    _connectionTimer = Timer.periodic(
+      _connectionCheckInterval,
+      (_) => unawaited(checkConnection()),
+    );
+  }
+
+  /// Periksa koneksi sekali sekaligus menyegarkan data bootstrap.
+  ///
+  /// Memakai ulang endpoint `bootstrap` — bukan rute baru — supaya pemantauan
+  /// langsung berfungsi di server yang sudah ter-deploy tanpa perlu perubahan
+  /// server, dan statistik di layar utama ikut mutakhir.
+  ///
+  /// Kegagalan jaringan menandai kiosk offline; keberhasilan mengembalikannya
+  /// online. Galat non-jaringan (mis. 401/403/404) TIDAK dianggap offline,
+  /// karena server jelas menjawab — masalahnya ada di kredensial, bukan
+  /// koneksi.
+  Future<void> checkConnection() async {
+    // Bila koneksi lambat, satu pemeriksaan bisa memakan waktu lebih lama
+    // daripada jeda timer. Tanpa penjaga ini, pemeriksaan akan menumpuk dan
+    // membebani server; cukup satu yang berjalan pada satu waktu.
+    if (_checking || _disposed) return;
+    _checking = true;
+
+    bool reachable;
+    try {
+      final data = await _api.bootstrap();
+      if (!_disposed) {
+        _bootstrap = data;
+      }
+      reachable = true;
+    } on ApiException catch (error) {
+      reachable = !error.isConnectionError;
+    } catch (_) {
+      reachable = true;
+    } finally {
+      _checking = false;
+    }
+
+    if (_disposed) return;
+
+    final next = reachable
+        ? KioskConnectionState.online
+        : KioskConnectionState.offline;
+    if (next == _connection) {
+      // Koneksi tidak berubah, tetapi statistik mungkin baru saja diperbarui.
+      if (reachable) notifyListeners();
+      return;
+    }
+    _connection = next;
+    notifyListeners();
+  }
+
+  /// Hentikan pantauan koneksi (dipakai saat dispose).
+  void stopConnectionWatch() {
+    _connectionTimer?.cancel();
+    _connectionTimer = null;
+  }
+
   // ---------------------------------------------------------------------------
   // Inisialisasi
   // ---------------------------------------------------------------------------
@@ -66,6 +169,7 @@ class KioskController extends ChangeNotifier {
 
     try {
       await _loadBootstrap();
+      startConnectionWatch();
     } on ApiException catch (error) {
       _status = KioskStatus.error;
       _startupError = error.bestMessage;
@@ -203,6 +307,8 @@ class KioskController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
+    stopConnectionWatch();
     _api.dispose();
     super.dispose();
   }

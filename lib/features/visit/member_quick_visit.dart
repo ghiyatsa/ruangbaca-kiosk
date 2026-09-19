@@ -83,6 +83,12 @@ class _MemberQuickVisitCardState extends State<MemberQuickVisitCard> {
 
   @override
   Widget build(BuildContext context) {
+    // Buku tamu cepat menulis ke server; saat offline tombol scan
+    // dinonaktifkan.
+    final offline = context.select<KioskController, bool>(
+      (controller) => controller.isOffline,
+    );
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -156,7 +162,7 @@ class _MemberQuickVisitCardState extends State<MemberQuickVisitCard> {
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            onPressed: _submitting ? null : _scanAndRecord,
+            onPressed: (_submitting || offline) ? null : _scanAndRecord,
             icon: _submitting
                 ? const SizedBox(
                     width: 18,

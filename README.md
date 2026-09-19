@@ -267,6 +267,26 @@ flutter test      # uji unit logika murni
   tidak menghasilkan transaksi ganda.
 - Lihat `docs/kiosk-api-spec.md` pada repo backend untuk detail lengkap.
 
+### Deteksi koneksi terputus
+
+Kiosk memantau konektivitas setiap **15 detik** lewat endpoint
+`GET /api/kiosk/bootstrap` (dipakai ulang sekaligus menyegarkan statistik, jadi
+tidak butuh rute baru di server). Bila server tidak terjangkau:
+
+- **Banner peringatan** muncul persisten di atas layar, dari layanan mana pun.
+- **Tombol aksi dinonaktifkan** (simpan kunjungan, cari buku, lanjutkan
+  peminjaman, kembalikan buku, daftar anggota, buku tamu cepat) supaya
+  pengunjung tidak menekan tombol yang pasti gagal.
+- Begitu jaringan pulih, banner hilang dan tombol aktif kembali — **tanpa
+  interaksi pengguna**.
+
+Galat non-jaringan (mis. `401`/`403`) **tidak** dianggap offline: server jelas
+menjawab, jadi masalahnya ada di kredensial, bukan koneksi.
+
+Pemeriksaan hanya berjalan satu pada satu waktu; bila jaringan lambat sehingga
+satu pemeriksaan melebihi jeda timer, pemeriksaan berikutnya dilewati agar
+server tidak dibanjiri.
+
 ### Keterbatasan: polling status pendaftaran
 
 Endpoint `GET /api/kiosk/members/status` dan `POST /api/kiosk/members/cancel`

@@ -124,3 +124,74 @@ class StatusBanner extends StatelessWidget {
 }
 
 enum StatusTone { success, info, warning, error }
+
+/// Banner peringatan saat kiosk kehilangan koneksi ke server.
+///
+/// Ditampilkan persisten di atas layar selama kiosk offline; sengaja memakai
+/// nada peringatan (bukan galat) karena kondisi ini biasanya sementara dan
+/// pulih sendiri begitu jaringan kembali.
+class OfflineBanner extends StatelessWidget {
+  const OfflineBanner({super.key, this.checking = false});
+
+  /// Benar bila pemeriksaan koneksi sedang berjalan.
+  final bool checking;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFBEB),
+        border: Border.all(color: const Color(0xFFFDE68A)),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.wifi_off_rounded,
+            color: Color(0xFFB45309),
+            size: 22,
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Koneksi ke server terputus',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFB45309),
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  'Layanan sementara tidak dapat digunakan. Kiosk akan aktif '
+                  'kembali sendiri begitu jaringan pulih.',
+                  style: TextStyle(
+                    color: Color(0xFF6B7280),
+                    fontSize: 13,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (checking) ...[
+            const SizedBox(width: 12),
+            const SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color(0xFFB45309),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

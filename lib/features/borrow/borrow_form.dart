@@ -149,6 +149,12 @@ class _BorrowFormState extends State<BorrowForm> {
 
   @override
   Widget build(BuildContext context) {
+    // Saat offline, aksi yang butuh server (cari buku, lanjutkan peminjaman)
+    // dinonaktifkan agar pengunjung tidak menekan tombol yang pasti gagal.
+    final offline = context.select<KioskController, bool>(
+      (controller) => controller.isOffline,
+    );
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -174,6 +180,7 @@ class _BorrowFormState extends State<BorrowForm> {
           _SelectedBooksPanel(
             books: _selectedBooks,
             maxBooks: widget.loanMaxBooks,
+            offline: offline,
             onPick: _pickBooks,
             onRemove: (book) => setState(() {
               _selectedBooks.removeWhere((item) => item.id == book.id);
@@ -181,7 +188,9 @@ class _BorrowFormState extends State<BorrowForm> {
           ),
           const SizedBox(height: 22),
           FilledButton.icon(
-            onPressed: (!_isComplete || _submitting) ? null : _submit,
+            onPressed: (!_isComplete || _submitting || offline)
+                ? null
+                : _submit,
             icon: _submitting
                 ? const SizedBox(
                     width: 18,
@@ -212,12 +221,14 @@ class _SelectedBooksPanel extends StatelessWidget {
   const _SelectedBooksPanel({
     required this.books,
     required this.maxBooks,
+    required this.offline,
     required this.onPick,
     required this.onRemove,
   });
 
   final List<KioskBook> books;
   final int maxBooks;
+  final bool offline;
   final VoidCallback onPick;
   final ValueChanged<KioskBook> onRemove;
 
@@ -248,7 +259,9 @@ class _SelectedBooksPanel extends StatelessWidget {
                 ),
                 const Spacer(),
                 OutlinedButton.icon(
-                  onPressed: books.length >= maxBooks ? null : onPick,
+                  onPressed: (offline || books.length >= maxBooks)
+                      ? null
+                      : onPick,
                   icon: const Icon(Icons.search, size: 18),
                   label: const Text('Cari Buku'),
                   style: OutlinedButton.styleFrom(

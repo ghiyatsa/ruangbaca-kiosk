@@ -7,6 +7,7 @@ import 'features/kiosk/kiosk_exit.dart';
 import 'features/startup/startup_error_screen.dart';
 import 'features/kiosk/kiosk_shell.dart';
 import 'state/kiosk_controller.dart';
+import 'widgets/feedback.dart';
 
 /// Akar aplikasi kiosk.
 class KioskApp extends StatelessWidget {
@@ -42,7 +43,18 @@ class _KioskRoot extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: _body(controller),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Banner koneksi selalu di atas layar, terlihat dari layanan
+              // mana pun; hanya muncul saat kiosk offline.
+              if (controller.isOffline) ...[
+                const OfflineBanner(),
+                const SizedBox(height: 16),
+              ],
+              Expanded(child: _body(controller)),
+            ],
+          ),
         ),
       ),
     );

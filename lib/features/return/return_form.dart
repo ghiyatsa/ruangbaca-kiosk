@@ -177,6 +177,12 @@ class _ReturnFormState extends State<ReturnForm> {
 
   @override
   Widget build(BuildContext context) {
+    // Cari anggota dan kembalikan buku butuh server; saat offline keduanya
+    // dinonaktifkan supaya pengunjung tidak menekan tombol yang pasti gagal.
+    final offline = context.select<KioskController, bool>(
+      (controller) => controller.isOffline,
+    );
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -248,7 +254,9 @@ class _ReturnFormState extends State<ReturnForm> {
           ),
           const SizedBox(height: 22),
           FilledButton.icon(
-            onPressed: (_selectedIds.isEmpty || _submitting) ? null : _submit,
+            onPressed: (_selectedIds.isEmpty || _submitting || offline)
+                ? null
+                : _submit,
             icon: _submitting
                 ? const SizedBox(
                     width: 18,

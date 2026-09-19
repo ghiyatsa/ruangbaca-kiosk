@@ -119,6 +119,12 @@ class _MemberFormState extends State<MemberForm> {
 
   @override
   Widget build(BuildContext context) {
+    // Pendaftaran anggota membuat akun di server; saat offline tombolnya
+    // dinonaktifkan.
+    final offline = context.select<KioskController, bool>(
+      (controller) => controller.isOffline,
+    );
+
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -238,7 +244,7 @@ class _MemberFormState extends State<MemberForm> {
             ),
             const SizedBox(height: 22),
             FilledButton.icon(
-              onPressed: _submitting ? null : _submit,
+              onPressed: (_submitting || offline) ? null : _submit,
               icon: _submitting
                   ? const SizedBox(
                       width: 18,
