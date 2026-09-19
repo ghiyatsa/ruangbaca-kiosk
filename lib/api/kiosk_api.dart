@@ -95,14 +95,19 @@ class KioskApi {
     } on TimeoutException {
       throw ApiException(
         'Server tidak merespons. Periksa koneksi jaringan kiosk.',
+        isConnectionError: true,
       );
     } on SocketException {
       throw ApiException(
         'Tidak dapat terhubung ke server (${config.baseUrl}). '
         'Pastikan jaringan perpustakaan aktif.',
+        isConnectionError: true,
       );
     } on http.ClientException catch (error) {
-      throw ApiException('Gangguan koneksi: ${error.message}');
+      throw ApiException(
+        'Gangguan koneksi: ${error.message}',
+        isConnectionError: true,
+      );
     } on FormatException {
       throw ApiException('Respons server tidak dapat dibaca.');
     }

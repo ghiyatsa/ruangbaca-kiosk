@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../api/api_exception.dart';
+import '../../api/idempotency.dart';
 import '../../core/theme.dart';
 import '../../models/models.dart';
 import '../../state/kiosk_controller.dart';
@@ -26,6 +26,7 @@ class BorrowForm extends StatefulWidget {
 
 class _BorrowFormState extends State<BorrowForm> {
   final _identifierController = TextEditingController();
+  final _idempotency = IdempotencyKey();
 
   final List<KioskBook> _selectedBooks = <KioskBook>[];
   bool _submitting = false;
@@ -33,6 +34,13 @@ class _BorrowFormState extends State<BorrowForm> {
 
   String get _identifier => _identifierController.text.trim();
   bool get _isComplete => _identifier.isNotEmpty && _selectedBooks.isNotEmpty;
+
+  /// Basis key idempotency: identitas anggota + daftar buku (urut) agar sama
+  /// untuk setiap percobaan ulang transaksi yang sama.
+  String get _idempotencyBasis {
+    final ids = _selectedBooks.map((book) => book.id).toList()..sort();
+    return 'borrow|$_identifier|${ids.join(',')}';
+  }
 
   @override
   void dispose() {
@@ -96,10 +104,14 @@ class _BorrowFormState extends State<BorrowForm> {
         verificationPayload: payload.trim(),
         memberIdentifier: _identifier,
         bookIds: bookIds,
-        idempotencyKey: const Uuid().v4(),
+        // Key stabil: percobaan ulang transaksi yang sama memakai key yang
+        // sama, sehingga server tidak membuat pinjaman kedua bila permintaan
+        // pertama sebenarnya sudah diproses tetapi responsnya hilang.
+        idempotencyKey: _idempotency.forBasis(_idempotencyBasis),
       );
 
       if (!mounted) return;
+      _idempotency.clear();
       _reset();
       KioskToast.show(
         context,
@@ -113,13 +125,14 @@ class _BorrowFormState extends State<BorrowForm> {
       );
     } on ApiException catch (error) {
       if (!mounted) return;
-      setState(() => _error = error.bestMessage);
+      setState(() => _error = transactionErrorMessage(error, 'Peminjaman'));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
 
   void _reset() {
+    _idempotency.clear();
     _identifierController.clear();
     setState(() {
       _selectedBooks.clear();

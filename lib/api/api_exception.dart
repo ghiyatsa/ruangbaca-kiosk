@@ -4,16 +4,26 @@ class ApiException implements Exception {
     this.message, {
     this.statusCode,
     this.errors = const <String, List<String>>{},
+    this.isConnectionError = false,
   });
 
   final String message;
   final int? statusCode;
   final Map<String, List<String>> errors;
 
+  /// Benar bila permintaan gagal karena masalah jaringan (timeout, koneksi
+  /// ditolak/terputus), bukan karena server menolak permintaan.
+  ///
+  /// Penting untuk transaksi tulis: pada kegagalan koneksi, permintaan bisa
+  /// saja sudah diproses server sehingga percobaan ulang harus memakai
+  /// `Idempotency-Key` yang sama, bukan key baru.
+  final bool isConnectionError;
+
   bool get isUnauthorized => statusCode == 401;
   bool get isForbidden => statusCode == 403;
   bool get isRateLimited => statusCode == 429;
   bool get isValidation => statusCode == 422;
+  bool get isConflict => statusCode == 409;
   bool get isServerError => statusCode != null && statusCode! >= 500;
 
   /// Pesan validasi pertama bila ada; lebih informatif untuk pengguna.
