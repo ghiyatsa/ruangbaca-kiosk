@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.2.0...v1.3.0) (2026-09-19)
+
+
+### Features
+
+* **search:** tampilkan saran kata kunci pada pencarian buku kiosk ([2f24602](https://github.com/ghiyatsa/ruangbaca-kiosk/commit/2f2460267b12c43d16feed487ab3dd57b4cb8f60))
+
+
+### Bug Fixes
+
+* **kiosk:** kirim Idempotency-Key yang stabil saat percobaan ulang ([ec8684c](https://github.com/ghiyatsa/ruangbaca-kiosk/commit/ec8684cc989983d7509ae4d00b42c1976735f930))
+
 ## [1.2.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.1.0...v1.2.0) (2026-09-18)
 
 
