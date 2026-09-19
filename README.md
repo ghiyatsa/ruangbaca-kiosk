@@ -29,10 +29,11 @@ Alur setiap layanan dibuat konsisten satu sama lain.
 Dialog pencarian buku memakai **mesin pencarian global yang sama dengan situs web**:
 
 - **Ranking relevansi** — judul yang persis/berawalan kata kunci tampil lebih dulu.
-- **Koreksi ejaan** — bila kata kunci salah ketik menghasilkan terlalu sedikit hasil, server mencari versi terkoreksi dan kiosk menampilkan "Menampilkan hasil untuk …".
-- **Saran kata kunci** — chip saran di bawah kolom pencarian; mengetuknya mengulang pencarian dengan kata kunci tersebut.
+- **Koreksi ejaan senyap** — bila kata kunci salah ketik menghasilkan terlalu sedikit hasil, server mencari versi terkoreksi sehingga hasilnya tetap benar. Kiosk **tidak** menampilkan pemberitahuan koreksi.
 
-Saran dibatasi pada **koleksi buku** saja. Kiosk adalah perangkat publik tanpa sesi anggota, sehingga karya ilmiah (skripsi/thesis) tidak pernah muncul dan **tidak ada riwayat pencarian** yang tersimpan.
+Kiosk sengaja tidak menampilkan saran kata kunci (chip) maupun pemberitahuan koreksi ejaan: perangkat publik harus tetap sesederhana mungkin, dan layar sentuh tanpa pengawas membuat elemen tambahan mudah disalahketuk.
+
+Hasil dibatasi pada **koleksi buku** saja. Kiosk adalah perangkat publik tanpa sesi anggota, sehingga karya ilmiah (skripsi/thesis) tidak pernah muncul dan **tidak ada riwayat pencarian** yang tersimpan.
 
 ### Notifikasi hasil aksi
 

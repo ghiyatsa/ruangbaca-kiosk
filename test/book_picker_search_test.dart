@@ -10,17 +10,17 @@ import 'package:ruangbaca_kiosk/core/app_config.dart';
 import 'package:ruangbaca_kiosk/state/kiosk_controller.dart';
 import 'package:ruangbaca_kiosk/widgets/book_picker_dialog.dart';
 
-/// Membuktikan dialog pencarian buku di menu peminjaman memakai sistem
-/// pencarian global: menampilkan saran kata kunci dan mengetuk saran
-/// mengulang pencarian dengan kata kunci tersebut.
+/// Membuktikan dialog pencarian buku di menu peminjaman memakai pencarian
+/// global (hasil berperingkat dari server) tanpa menampilkan saran kata kunci
+/// maupun pemberitahuan koreksi ejaan — kiosk harus tetap sesederhana mungkin.
 void main() {
   const config = AppConfig(
     baseUrl: 'https://contoh.test',
-    apiKey: 'kunci-uji',
+    apiKey: 'uji-api-key',
     deviceName: 'Kiosk Uji',
   );
 
-  testWidgets('menampilkan saran dan mengetuknya mengulang pencarian', (
+  testWidgets('menampilkan hasil buku tanpa saran atau koreksi ejaan', (
     tester,
   ) async {
     final queries = <String>[];
@@ -29,6 +29,8 @@ void main() {
       final q = request.url.queryParameters['q'] ?? '';
       queries.add(q);
 
+      // Server tiruan tetap mengirim saran/koreksi (server lama), tetapi UI
+      // kiosk harus mengabaikannya.
       return http.Response(
         jsonEncode({
           'books': [
@@ -43,10 +45,8 @@ void main() {
               'isbn': '9786021234567',
             },
           ],
-          'suggestions': q == 'metde'
-              ? ['metode penelitian kualitatif', 'metode']
-              : <String>[],
-          'corrected_query': q == 'metde' ? 'metode' : null,
+          'suggestions': ['metode penelitian kualitatif', 'metode'],
+          'corrected_query': 'metode',
         }),
         200,
         headers: {'content-type': 'application/json'},
@@ -73,15 +73,12 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pumpAndSettle();
 
-    // Saran tampil dan indikator koreksi ejaan muncul.
-    expect(find.text('metode penelitian kualitatif'), findsOneWidget);
-    expect(find.textContaining('Menampilkan hasil untuk'), findsOneWidget);
+    // Hasil buku tampil...
+    expect(find.text('Metode Penelitian Kualitatif'), findsOneWidget);
 
-    // Ketuk saran -> query berubah dan pencarian diulang.
-    await tester.tap(find.text('metode penelitian kualitatif'));
-    await tester.pumpAndSettle();
-
-    expect(queries.last, 'metode penelitian kualitatif');
+    // ...tetapi TIDAK ada chip saran maupun pemberitahuan koreksi ejaan.
+    expect(find.byType(ActionChip), findsNothing);
+    expect(find.textContaining('Menampilkan hasil untuk'), findsNothing);
 
     controller.dispose();
   });

@@ -218,18 +218,13 @@ class KioskBook {
 
 /// Hasil pencarian buku (`GET /api/kiosk/books/search`).
 ///
-/// Berisi daftar buku, saran kata kunci, dan query terkoreksi (bila ejaan
-/// asli diperbaiki server).
+/// Hanya berisi daftar buku. Saran kata kunci dan koreksi ejaan sengaja tidak
+/// ditampilkan di kiosk karena perangkat publik harus tetap sederhana; koreksi
+/// ejaan tetap dikerjakan server secara senyap.
 class KioskBookSearchResult {
-  const KioskBookSearchResult({
-    this.books = const <KioskBook>[],
-    this.suggestions = const <String>[],
-    this.correctedQuery,
-  });
+  const KioskBookSearchResult({this.books = const <KioskBook>[]});
 
   final List<KioskBook> books;
-  final List<String> suggestions;
-  final String? correctedQuery;
 
   factory KioskBookSearchResult.fromJson(Map<String, dynamic> json) {
     final rawBooks = json['books'];
@@ -242,20 +237,7 @@ class KioskBookSearchResult {
       }
     }
 
-    final rawSuggestions = json['suggestions'];
-    final suggestions = <String>[];
-    if (rawSuggestions is List) {
-      for (final item in rawSuggestions) {
-        final text = _asStringOrNull(item);
-        if (text != null) suggestions.add(text);
-      }
-    }
-
-    return KioskBookSearchResult(
-      books: books,
-      suggestions: suggestions,
-      correctedQuery: _asStringOrNull(json['corrected_query']),
-    );
+    return KioskBookSearchResult(books: books);
   }
 }
 

@@ -153,7 +153,9 @@ void main() {
       expect(book.availableItemsCount, 2);
     });
 
-    test('KioskBookSearchResult parses books, suggestions, and correction', () {
+    test('KioskBookSearchResult parses books and ignores legacy extras', () {
+      // Server lama masih mengirim suggestions/corrected_query; model harus
+      // tetap mem-parse daftar buku tanpa error.
       final result = KioskBookSearchResult.fromJson({
         'books': [
           {
@@ -168,16 +170,12 @@ void main() {
 
       expect(result.books, hasLength(1));
       expect(result.books.first.title, 'Metode Penelitian');
-      expect(result.suggestions, ['metode penelitian kualitatif', 'metode']);
-      expect(result.correctedQuery, 'metode');
     });
 
     test('KioskBookSearchResult tolerates missing fields', () {
       final result = KioskBookSearchResult.fromJson(const {});
 
       expect(result.books, isEmpty);
-      expect(result.suggestions, isEmpty);
-      expect(result.correctedQuery, isNull);
     });
 
     test('MemberClaim.fromStatusJson maps approval_pending', () {
