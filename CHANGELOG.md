@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.3.0...v1.4.0) (2026-09-19)
+
+
+### Features
+
+* **kiosk:** deteksi koneksi terputus dengan banner persisten ([9710573](https://github.com/ghiyatsa/ruangbaca-kiosk/commit/97105738b5977c43bd0d328b2ffec95aa1430e0f))
+
 ## [1.3.0](https://github.com/ghiyatsa/ruangbaca-kiosk/compare/v1.2.0...v1.3.0) (2026-09-19)
 
 
