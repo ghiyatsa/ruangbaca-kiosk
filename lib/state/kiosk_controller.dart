@@ -315,7 +315,12 @@ class KioskController extends ChangeNotifier {
   }
 }
 
-/// Menjalankan future tanpa menunggu (menghindari lint `unawaited_futures`).
+/// Menjalankan future tanpa menunggu, sekaligus menelan galatnya.
+///
+/// Sengaja bukan `dart:async.unawaited`: versi SDK membiarkan galat menjadi
+/// unhandled exception yang bisa menjatuhkan aplikasi kiosk. Pemanggil di sini
+/// adalah tugas latar (pantau koneksi, muat statistik) yang kegagalannya cukup
+/// diabaikan.
 void unawaited(Future<void> future) {
   future.then((_) {}, onError: (_) {});
 }
