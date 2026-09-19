@@ -149,11 +149,8 @@ class _BorrowFormState extends State<BorrowForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Saat offline, aksi yang butuh server (cari buku, lanjutkan peminjaman)
-    // dinonaktifkan agar pengunjung tidak menekan tombol yang pasti gagal.
-    final offline = context.select<KioskController, bool>(
-      (controller) => controller.isOffline,
-    );
+    // Server tak terjangkau: pencarian dan peminjaman pasti gagal.
+    final offline = context.watchOffline();
 
     return SingleChildScrollView(
       child: Column(

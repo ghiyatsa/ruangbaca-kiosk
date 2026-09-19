@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../api/api_exception.dart';
 import '../api/kiosk_api.dart';
@@ -317,4 +318,13 @@ class KioskController extends ChangeNotifier {
 /// Menjalankan future tanpa menunggu (menghindari lint `unawaited_futures`).
 void unawaited(Future<void> future) {
   future.then((_) {}, onError: (_) {});
+}
+
+/// Akses status koneksi kiosk dari widget.
+extension KioskConnectionContext on BuildContext {
+  /// Pantau status offline, dan bangun ulang widget HANYA saat status itu
+  /// berubah — bukan setiap kali controller memberi tahu (mis. statistik
+  /// tersegarkan tiap 15 detik).
+  bool watchOffline() =>
+      select<KioskController, bool>((controller) => controller.isOffline);
 }

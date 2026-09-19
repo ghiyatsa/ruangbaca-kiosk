@@ -177,11 +177,8 @@ class _ReturnFormState extends State<ReturnForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Cari anggota dan kembalikan buku butuh server; saat offline keduanya
-    // dinonaktifkan supaya pengunjung tidak menekan tombol yang pasti gagal.
-    final offline = context.select<KioskController, bool>(
-      (controller) => controller.isOffline,
-    );
+    // Server tak terjangkau: pencarian anggota dan pengembalian pasti gagal.
+    final offline = context.watchOffline();
 
     return SingleChildScrollView(
       child: Column(

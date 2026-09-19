@@ -120,12 +120,8 @@ class _VisitFormState extends State<VisitForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Saat offline, tombol simpan dinonaktifkan: server tidak dapat dijangkau,
-    // jadi percobaan hanya akan gagal. `select` membatasi pembangunan ulang
-    // hanya ketika status offline benar-benar berubah.
-    final offline = context.select<KioskController, bool>(
-      (controller) => controller.isOffline,
-    );
+    // Server tak terjangkau: menekan tombol hanya akan gagal.
+    final offline = context.watchOffline();
 
     return SingleChildScrollView(
       child: Form(

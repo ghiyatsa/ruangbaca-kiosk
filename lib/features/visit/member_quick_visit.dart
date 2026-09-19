@@ -83,11 +83,8 @@ class _MemberQuickVisitCardState extends State<MemberQuickVisitCard> {
 
   @override
   Widget build(BuildContext context) {
-    // Buku tamu cepat menulis ke server; saat offline tombol scan
-    // dinonaktifkan.
-    final offline = context.select<KioskController, bool>(
-      (controller) => controller.isOffline,
-    );
+    // Server tak terjangkau: scan tidak akan tercatat.
+    final offline = context.watchOffline();
 
     return Container(
       padding: const EdgeInsets.all(20),

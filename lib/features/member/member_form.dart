@@ -119,11 +119,8 @@ class _MemberFormState extends State<MemberForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Pendaftaran anggota membuat akun di server; saat offline tombolnya
-    // dinonaktifkan.
-    final offline = context.select<KioskController, bool>(
-      (controller) => controller.isOffline,
-    );
+    // Server tak terjangkau: pendaftaran tidak akan tersimpan.
+    final offline = context.watchOffline();
 
     return SingleChildScrollView(
       child: Form(
